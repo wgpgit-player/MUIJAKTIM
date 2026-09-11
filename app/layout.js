@@ -10,8 +10,8 @@ export const metadata = {
     "Portal layanan keagamaan digital Majelis Ulama Indonesia Kota Administrasi Jakarta Timur: fatwa, dakwah, dan layanan umat.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/icons/icon-192.png",
-    apple: "/icons/icon-192.png",
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
 };
 
