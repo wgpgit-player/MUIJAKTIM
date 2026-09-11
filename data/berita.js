@@ -1,0 +1,61 @@
+export const beritaList = [
+  {
+    slug: "selamat-sukses-pbnu",
+    title:
+      "Sah Jadi Ketum PBNU, Gus Kikin Tandatangani 5 Poin Kontrak Jam'iyyah dan Siap Disanksi",
+    date: "2026-08-31",
+    category: "Berita Baru",
+    excerpt:
+      "Ditetapkan pada Muktamar ke-35 NU di Ponpes Bahrul Ulum, Tambakberas, Jombang. MUI Jakarta Timur turut menyampaikan ucapan selamat.",
+    gradient: "from-green-dk2 to-green",
+    featured: true,
+  },
+  {
+    slug: "pelantikan-dewan-pertimbangan",
+    title: "Pelantikan Dewan Pimpinan dan Dewan Pertimbangan MUI Kabupaten...",
+    date: "1 September 2026",
+    category: "Kajian Fikih",
+    excerpt: "Pelantikan pengurus baru periode 2026-2031 di tingkat kabupaten/kota se-Jakarta Timur.",
+    gradient: "from-emerald to-green",
+  },
+  {
+    slug: "presiden-prabowo-muktamar-nu",
+    title: "Presiden Prabowo Dijadwalkan Tutup Rangkaian Muktamar Ke-35 NU Hari...",
+    date: "2026-08-31",
+    category: "Siaran Pers",
+    excerpt: "Agenda penutupan Muktamar NU ke-35 dijadwalkan dihadiri oleh Presiden RI.",
+    gradient: "from-green-dk to-green",
+  },
+  {
+    slug: "pastikan-mutu-gizi-keamanan-pangan",
+    title: "Pastikan Mutu Gizi dan Keamanan Pangan, Muhammadiyah Sertifikasi di...",
+    date: "2026-08-30",
+    category: "Ekonomi Syariah",
+    excerpt: "Kolaborasi lintas ormas dalam menjaga standar mutu gizi dan keamanan pangan bagi umat.",
+    gradient: "from-green-dk2 to-emerald",
+  },
+  {
+    slug: "resmil-ahwa-tetapkan-gus-kikin",
+    title: "Resmi! AHWA Tetapkan Gus Kikin Sebagai Ketua Umum PBNU Masa...",
+    date: "2026-08-31",
+    category: "Rilis Pers",
+    excerpt: "Penetapan resmi melalui mekanisme Ahlul Halli wal Aqdi (AHWA) pada Muktamar ke-35 NU.",
+    gradient: "from-green to-green-dk",
+  },
+  {
+    slug: "sinergi-dakwah-untuk-umat",
+    title: "Sinergi Dakwah untuk Umat: Langkah Baru MUI Jakarta Timur",
+    date: "Juli 2026",
+    category: "Dakwah",
+    excerpt: "Langkah-langkah baru MUI Jakarta Timur dalam memperkuat sinergi dakwah bersama ormas dan masyarakat.",
+    gradient: "from-emerald to-green",
+  },
+  {
+    slug: "penguatan-moderasi-beragama-2026",
+    title: "MUI Jakarta Timur Hadiri Penguatan Moderasi Beragama 2026",
+    date: "2026",
+    category: "Moderasi Beragama",
+    excerpt: "Sinergi lintas kelompok masyarakat Jaktim untuk mewujudkan masyarakat yang harmonis dan toleran.",
+    gradient: "from-green-dk to-green",
+  },
+];

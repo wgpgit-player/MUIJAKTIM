@@ -1,0 +1,26 @@
+{
+  "name": "MUI Jakarta Timur",
+  "short_name": "MUI Jaktim",
+  "description": "Portal layanan keagamaan digital Majelis Ulama Indonesia Kota Administrasi Jakarta Timur",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF8F1",
+  "theme_color": "#0B4D33",
+  "lang": "id",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

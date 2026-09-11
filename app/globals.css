@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+@layer base {
+  html,
+  body {
+    background-color: #faf8f1;
+    color: #10241c;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a {
+    color: #0b4d33;
+  }
+  a:hover {
+    color: #17a374;
+  }
+}
