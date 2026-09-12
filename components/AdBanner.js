@@ -5,14 +5,20 @@ import { prisma } from "@/lib/prisma";
 // iklan" placeholder if the slot has nothing configured yet — never renders blank.
 export default async function AdBanner({ placement }) {
   const now = new Date();
-  const candidates = await prisma.advertisement.findMany({
-    where: {
-      placement,
-      active: true,
-      OR: [{ startAt: null }, { startAt: { lte: now } }],
-      AND: [{ OR: [{ endAt: null }, { endAt: { gte: now } }] }],
-    },
-  });
+  let candidates = [];
+  try {
+    candidates = await prisma.advertisement.findMany({
+      where: {
+        placement,
+        active: true,
+        OR: [{ startAt: null }, { startAt: { lte: now } }],
+        AND: [{ OR: [{ endAt: null }, { endAt: { gte: now } }] }],
+      },
+    });
+  } catch {
+    // A DB hiccup should never take down the page around it — fall through to placeholder.
+    candidates = [];
+  }
 
   if (candidates.length === 0) {
     return (

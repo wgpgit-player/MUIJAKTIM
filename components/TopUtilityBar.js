@@ -15,17 +15,19 @@ const SCHEDULE_ITEMS = [
 
 export default function TopUtilityBar() {
   const { loc, request: requestLocation } = useGeolocation(DEFAULT_LOC);
-  const [dateStr, setDateStr] = useState("");
   const [timings, setTimings] = useState(null);
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState(null);
 
   useEffect(() => {
-    setDateStr(
-      new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
-    );
-    const t = setInterval(() => setNow(new Date()), 60000);
+    setNow(new Date());
+    const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
+
+  const dateStr = now
+    ? now.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
+    : "";
+  const timeStr = now ? now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) : "";
 
   useEffect(() => {
     requestLocation();
@@ -46,7 +48,7 @@ export default function TopUtilityBar() {
   }, [loc]);
 
   const activeKey = useMemo(() => {
-    if (!timings) return null;
+    if (!timings || !now) return null;
     const todayStr = now.toDateString();
     const entries = SCHEDULE_ITEMS.map(({ key }) => {
       const raw = timings[key];
@@ -77,6 +79,15 @@ export default function TopUtilityBar() {
               <path d="M3 9h18M8 2v4M16 2v4" />
             </svg>
             {dateStr}
+          </span>
+        )}
+        {timeStr && (
+          <span className="flex items-center gap-1.5 font-mono tabular-nums">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3.5 2" />
+            </svg>
+            {timeStr} WIB
           </span>
         )}
       </div>
