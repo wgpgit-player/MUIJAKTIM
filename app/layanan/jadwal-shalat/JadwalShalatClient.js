@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { formatDateID } from "@/lib/date";
+import QiblaCompass from "@/components/compass/QiblaCompass";
 
 const PRAYER_KEYS = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
 const PRAYER_LABELS = {
@@ -14,34 +16,6 @@ const PRAYER_LABELS = {
 };
 
 const DEFAULT_LOC = { lat: -6.225, lon: 106.9004, label: "Jakarta Timur (default)" };
-const KAABA = { lat: 21.4225, lon: 39.8262 };
-
-function toRad(d) {
-  return (d * Math.PI) / 180;
-}
-function toDeg(r) {
-  return (r * 180) / Math.PI;
-}
-
-function qiblaBearing(lat, lon) {
-  const phiK = toRad(KAABA.lat);
-  const lambdaK = toRad(KAABA.lon);
-  const phi = toRad(lat);
-  const lambda = toRad(lon);
-  const psi =
-    toDeg(
-      Math.atan2(
-        Math.sin(lambdaK - lambda),
-        Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda)
-      )
-    ) % 360;
-  return (psi + 360) % 360;
-}
-
-function compassLabel(deg) {
-  const dirs = ["Utara", "Timur Laut", "Timur", "Tenggara", "Selatan", "Barat Daya", "Barat", "Barat Laut"];
-  return dirs[Math.round(deg / 45) % 8];
-}
 
 function formatCountdown(ms) {
   if (ms < 0) ms = 0;
@@ -68,22 +42,33 @@ export default function JadwalShalatClient() {
     let cancelled = false;
     async function load() {
       setStatus("loading");
+      const cacheKey = `prayer-times:${loc.lat.toFixed(2)}:${loc.lon.toFixed(2)}:${new Date().toDateString()}`;
       try {
-        const today = new Date();
-        const dateStr = `${String(today.getDate()).padStart(2, "0")}-${String(today.getMonth() + 1).padStart(
-          2,
-          "0"
-        )}-${today.getFullYear()}`;
-        const url = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${loc.lat}&longitude=${loc.lon}&method=11`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("fetch failed");
+        const res = await fetch(`/api/prayer-times?lat=${loc.lat}&lon=${loc.lon}`, {
+          signal: AbortSignal.timeout(8000),
+        });
         const data = await res.json();
         if (cancelled) return;
-        setTimings(data.data.timings);
-        setHijriDate(data.data.date.hijri);
+        if (!data.ok) throw new Error(data.error || "fetch failed");
+        setTimings(data.timings);
+        setHijriDate(data.hijri);
         setStatus("done");
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify({ timings: data.timings, hijri: data.hijri }));
+        } catch {}
       } catch (e) {
-        if (!cancelled) setStatus("error");
+        if (cancelled) return;
+        try {
+          const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            setTimings(parsed.timings);
+            setHijriDate(parsed.hijri);
+            setStatus("done");
+            return;
+          }
+        } catch {}
+        setStatus("error");
       }
     }
     load();
@@ -108,7 +93,12 @@ export default function JadwalShalatClient() {
     );
   };
 
-  const bearing = useMemo(() => qiblaBearing(loc.lat, loc.lon), [loc]);
+  // Minta lokasi otomatis saat halaman dibuka, supaya jadwal & kiblat langsung akurat
+  // tanpa perlu klik manual. Kalau ditolak/gagal, tetap fallback ke DEFAULT_LOC.
+  useEffect(() => {
+    useMyLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const nextPrayer = useMemo(() => {
     if (!timings) return null;
@@ -151,7 +141,7 @@ export default function JadwalShalatClient() {
               <div className="text-[13px] font-bold text-ink">{loc.label}</div>
               {hijriDate && (
                 <div className="text-[12px] text-ink-soft">
-                  {now.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+                  {formatDateID(now)}
                   {" · "}
                   {hijriDate.day} {hijriDate.month.en} {hijriDate.year} H
                 </div>
@@ -214,49 +204,7 @@ export default function JadwalShalatClient() {
         <div>
           <div className="text-[13px] font-bold text-ink mb-4">Arah Kiblat</div>
           <div className="bg-white rounded-2xl border border-line p-6 flex flex-col items-center">
-            <div className="relative w-48 h-48 mb-4">
-              <div className="absolute inset-0 rounded-full border-[3px] border-line" />
-              <div className="absolute inset-3 rounded-full border border-line/60" />
-              {["U", "T", "S", "B"].map((label, i) => (
-                <div
-                  key={label}
-                  className="absolute text-[11px] font-bold text-ink-soft"
-                  style={{
-                    top: i === 0 ? "4px" : i === 2 ? "auto" : "50%",
-                    bottom: i === 2 ? "4px" : "auto",
-                    left: i === 3 ? "6px" : i === 1 ? "auto" : "50%",
-                    right: i === 1 ? "6px" : "auto",
-                    transform: i === 0 || i === 2 ? "translateX(-50%)" : "translateY(-50%)",
-                  }}
-                >
-                  {label}
-                </div>
-              ))}
-              <div
-                className="absolute top-1/2 left-1/2 origin-bottom"
-                style={{
-                  width: "3px",
-                  height: "76px",
-                  marginLeft: "-1.5px",
-                  marginTop: "-76px",
-                  transform: `rotate(${bearing}deg)`,
-                  transformOrigin: "bottom center",
-                }}
-              >
-                <div className="w-full h-full bg-green-dk2 rounded-full relative">
-                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[12px] border-b-green-dk2" />
-                </div>
-              </div>
-              <div className="absolute top-1/2 left-1/2 w-2.5 h-2.5 -mt-[5px] -ml-[5px] rounded-full bg-green-dk2" />
-            </div>
-            <div className="text-[22px] font-extrabold text-green-dk2">{bearing.toFixed(1)}°</div>
-            <div className="text-[12.5px] text-ink-soft font-semibold mt-0.5">
-              dari Utara &middot; ke arah {compassLabel(bearing)}
-            </div>
-            <p className="text-[11.5px] text-ink-soft text-center leading-relaxed mt-4">
-              Arahkan garis hijau sesuai kompas fisik (mis. kompas HP) yang menunjuk Utara sebenarnya untuk
-              menyelaraskan arah kiblat.
-            </p>
+            <QiblaCompass lat={loc.lat} lon={loc.lon} />
           </div>
         </div>
       </div>

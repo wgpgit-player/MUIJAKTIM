@@ -3,10 +3,14 @@
 // tautan balik ke sumber asli, supaya tidak melanggar hak cipta media sumber).
 // Tayang otomatis tanpa perlu direview manual karena isinya murni kurasi tautan, bukan
 // konten editorial atas nama MUI Jakarta Timur.
+import { getLastGood, setLastGood } from "@/lib/staleCache";
+
 const SOURCES = [
   { key: "nu-online", name: "NU Online", feed: "https://nu.or.id/rss.xml" },
   { key: "republika", name: "Republika", feed: "https://www.republika.co.id/rss" },
 ];
+
+const CACHE_KEY = "news-feed-items";
 
 export const revalidate = 1800; // cache 30 menit
 
@@ -44,6 +48,7 @@ export async function GET() {
       const res = await fetch(source.feed, {
         next: { revalidate },
         headers: { "User-Agent": "Mozilla/5.0 (compatible; MUIJaktimBot/1.0)" },
+        signal: AbortSignal.timeout(8000),
       });
       if (!res.ok) throw new Error(`${source.key} ${res.status}`);
       const xml = await res.text();
@@ -58,10 +63,15 @@ export async function GET() {
 
   items.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
 
-  return Response.json({
-    ok: items.length > 0,
-    items,
-    sources: SOURCES.map((s) => s.name),
-    errors,
-  });
+  if (items.length > 0) {
+    setLastGood(CACHE_KEY, items);
+    return Response.json({ ok: true, items, sources: SOURCES.map((s) => s.name), errors });
+  }
+
+  const stale = getLastGood(CACHE_KEY);
+  if (stale) {
+    return Response.json({ ok: true, stale: true, items: stale, sources: SOURCES.map((s) => s.name), errors });
+  }
+
+  return Response.json({ ok: false, items: [], sources: SOURCES.map((s) => s.name), errors });
 }

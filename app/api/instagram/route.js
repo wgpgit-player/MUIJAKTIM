@@ -9,7 +9,11 @@
 //   4. Set di environment variable hosting (mis. Vercel): IG_ACCESS_TOKEN dan IG_USER_ID.
 // Selama dua variabel ini belum di-set, endpoint mengembalikan ok:false dan komponen di
 // frontend otomatis menampilkan galeri fallback supaya tampilan tetap rapi.
+import { getLastGood, setLastGood } from "@/lib/staleCache";
+
 export const revalidate = 900;
+
+const CACHE_KEY = "instagram-posts";
 
 export async function GET() {
   const token = process.env.IG_ACCESS_TOKEN;
@@ -30,7 +34,7 @@ export async function GET() {
   try {
     const fields = "id,caption,media_type,media_url,thumbnail_url,permalink,timestamp";
     const url = `https://graph.instagram.com/${userId}/media?fields=${fields}&access_token=${token}&limit=6`;
-    const res = await fetch(url, { next: { revalidate } });
+    const res = await fetch(url, { next: { revalidate }, signal: AbortSignal.timeout(8000) });
     if (!res.ok) throw new Error(`graph api ${res.status}`);
     const data = await res.json();
     const posts = (data.data ?? []).map((p) => ({
@@ -40,8 +44,13 @@ export async function GET() {
       permalink: p.permalink,
       timestamp: p.timestamp,
     }));
+    setLastGood(CACHE_KEY, posts);
     return Response.json({ ok: true, configured: true, posts });
   } catch (err) {
+    const stale = getLastGood(CACHE_KEY);
+    if (stale) {
+      return Response.json({ ok: true, configured: true, stale: true, posts: stale }, { status: 200 });
+    }
     return Response.json({ ok: false, configured: true, error: String(err), posts: [] }, { status: 200 });
   }
 }

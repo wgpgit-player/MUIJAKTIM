@@ -13,7 +13,7 @@ export const beritaList = [
   {
     slug: "pelantikan-dewan-pertimbangan",
     title: "Pelantikan Dewan Pimpinan dan Dewan Pertimbangan MUI Kabupaten...",
-    date: "1 September 2026",
+    date: "2026-09-01",
     category: "Kajian Fikih",
     excerpt: "Pelantikan pengurus baru periode 2026-2031 di tingkat kabupaten/kota se-Jakarta Timur.",
     gradient: "from-emerald to-green",
@@ -45,7 +45,7 @@ export const beritaList = [
   {
     slug: "sinergi-dakwah-untuk-umat",
     title: "Sinergi Dakwah untuk Umat: Langkah Baru MUI Jakarta Timur",
-    date: "Juli 2026",
+    date: "2026-07-01",
     category: "Dakwah",
     excerpt: "Langkah-langkah baru MUI Jakarta Timur dalam memperkuat sinergi dakwah bersama ormas dan masyarakat.",
     gradient: "from-emerald to-green",
@@ -53,7 +53,7 @@ export const beritaList = [
   {
     slug: "penguatan-moderasi-beragama-2026",
     title: "MUI Jakarta Timur Hadiri Penguatan Moderasi Beragama 2026",
-    date: "2026",
+    date: "2026-01-01",
     category: "Moderasi Beragama",
     excerpt: "Sinergi lintas kelompok masyarakat Jaktim untuk mewujudkan masyarakat yang harmonis dan toleran.",
     gradient: "from-green-dk to-green",

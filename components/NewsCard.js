@@ -1,3 +1,5 @@
+import { formatDateID } from "@/lib/date";
+
 export default function NewsCard({ item }) {
   return (
     <div className="bg-white border border-line rounded-2xl overflow-hidden">
@@ -7,7 +9,7 @@ export default function NewsCard({ item }) {
         </span>
       </div>
       <div className="p-5">
-        <div className="text-[12px] text-ink-soft font-semibold mb-2">{item.date}</div>
+        <div className="text-[12px] text-ink-soft font-semibold mb-2">{formatDateID(item.date)}</div>
         <div className="text-[15.5px] font-bold leading-snug text-ink">{item.title}</div>
       </div>
     </div>

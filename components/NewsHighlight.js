@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatDateID } from "@/lib/date";
 
 export default function NewsHighlight({ item }) {
   return (
@@ -15,7 +16,7 @@ export default function NewsHighlight({ item }) {
           <h3 className="text-white font-extrabold text-[17px] md:text-[21px] leading-snug mb-2 group-hover:underline underline-offset-2">
             {item.title}
           </h3>
-          <div className="text-white/70 text-[12px] font-semibold">{item.date}</div>
+          <div className="text-white/70 text-[12px] font-semibold">{formatDateID(item.date)}</div>
         </div>
       </div>
     </Link>

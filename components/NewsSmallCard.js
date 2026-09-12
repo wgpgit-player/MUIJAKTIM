@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatDateID } from "@/lib/date";
 
 export default function NewsSmallCard({ item }) {
   return (
@@ -14,7 +15,7 @@ export default function NewsSmallCard({ item }) {
         <div className="text-[13px] font-bold leading-snug text-ink line-clamp-2 group-hover:text-green-dk transition-colors">
           {item.title}
         </div>
-        <div className="text-[11px] text-ink-soft font-semibold mt-1.5">{item.date}</div>
+        <div className="text-[11px] text-ink-soft font-semibold mt-1.5">{formatDateID(item.date)}</div>
       </div>
     </Link>
   );

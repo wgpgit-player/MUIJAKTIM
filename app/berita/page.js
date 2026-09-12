@@ -1,14 +1,35 @@
 import NewsCard from "@/components/NewsCard";
 import ExternalNewsFeed from "@/components/ExternalNewsFeed";
-import { beritaList } from "@/data/berita";
+import { prisma } from "@/lib/prisma";
+import { formatDateID } from "@/lib/date";
 
 export const metadata = {
   title: "Berita & Opini — MUI Jakarta Timur",
 };
+export const dynamic = "force-dynamic";
 
-export default function BeritaPage() {
-  const featured = beritaList.find((b) => b.featured);
-  const rest = beritaList.filter((b) => !b.featured);
+const GRADIENTS = [
+  "from-green-dk2 to-green",
+  "from-emerald to-green",
+  "from-green-dk to-green",
+  "from-green-dk2 to-emerald",
+  "from-green to-green-dk",
+];
+
+function gradientFor(slug) {
+  const hash = [...slug].reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+  return GRADIENTS[hash % GRADIENTS.length];
+}
+
+export default async function BeritaPage() {
+  const published = await prisma.news.findMany({
+    where: { status: "PUBLISHED" },
+    orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+  });
+
+  const withGradient = published.map((n) => ({ ...n, date: n.publishedAt ?? n.createdAt, gradient: gradientFor(n.slug) }));
+  const featured = withGradient.find((b) => b.featured) ?? withGradient[0];
+  const rest = withGradient.filter((b) => b.id !== featured?.id);
 
   return (
     <div>
@@ -37,20 +58,23 @@ export default function BeritaPage() {
 
       {featured && (
         <div className="max-w-7xl mx-auto px-5 md:px-16 mb-6">
-          <div className="bg-white border border-line rounded-2xl overflow-hidden md:grid md:grid-cols-2">
+          <a
+            href={`/berita/${featured.slug}`}
+            className="block bg-white border border-line rounded-2xl overflow-hidden md:grid md:grid-cols-2 hover:border-emerald/40 transition-colors"
+          >
             <div className={`bg-gradient-to-br ${featured.gradient} min-h-[220px] md:min-h-[280px] flex items-end p-7`}>
               <span className="text-[11.5px] font-bold px-3 py-1.5 rounded-full bg-white/92 text-green-dk w-fit">
                 {featured.category}
               </span>
             </div>
             <div className="p-7 md:p-9 flex flex-col justify-center">
-              <div className="text-[12.5px] text-ink-soft font-semibold mb-2.5">{featured.date}</div>
+              <div className="text-[12.5px] text-ink-soft font-semibold mb-2.5">{formatDateID(featured.date)}</div>
               <div className="text-[19px] md:text-[21px] font-extrabold leading-snug text-green-dk2 mb-3">
                 {featured.title}
               </div>
               <div className="text-[13.5px] text-ink-soft leading-relaxed">{featured.excerpt}</div>
             </div>
-          </div>
+          </a>
         </div>
       )}
 
@@ -58,8 +82,15 @@ export default function BeritaPage() {
         <div className="grid md:grid-cols-[1fr_320px] gap-8 items-start">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {rest.map((item) => (
-              <NewsCard key={item.slug} item={item} />
+              <a key={item.slug} href={`/berita/${item.slug}`}>
+                <NewsCard item={item} />
+              </a>
             ))}
+            {rest.length === 0 && !featured && (
+              <p className="text-[13px] text-ink-soft col-span-2">
+                Belum ada berita yang tayang. Tambahkan lewat panel admin.
+              </p>
+            )}
           </div>
 
           <div className="md:sticky md:top-6">
