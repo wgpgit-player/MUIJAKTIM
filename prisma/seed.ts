@@ -205,6 +205,67 @@ async function seedPageContent() {
   console.log(`Seeded ${PAGE_CONTENT.length} page_content items.`);
 }
 
+const QUICK_ICONS: {
+  label: string;
+  iconUrl: string;
+  linkUrl: string;
+  sortOrder: number;
+  showOnDesktop: boolean;
+  description?: string;
+}[] = [
+  { label: "Jadwal Shalat", iconUrl: "/icons/jadwal-shalat.png", linkUrl: "/layanan/jadwal-shalat", sortOrder: 0, showOnDesktop: false },
+  { label: "Kiblat", iconUrl: "/icons/kiblat.png", linkUrl: "/layanan/jadwal-shalat", sortOrder: 1, showOnDesktop: false },
+  { label: "Kalender Hijriah", iconUrl: "/icons/kalender-hijriah.png", linkUrl: "/kalender", sortOrder: 2, showOnDesktop: false },
+  { label: "Fiqih & Fatwa", iconUrl: "/icons/fatwa.png", linkUrl: "/fatwa", sortOrder: 3, showOnDesktop: true, description: "Kumpulan fatwa MUI" },
+  { label: "Berita", iconUrl: "/icons/berita.png", linkUrl: "/berita", sortOrder: 4, showOnDesktop: false },
+  { label: "Layanan Umat", iconUrl: "/icons/layanan-umat.png", linkUrl: "/layanan/tanya-ulama", sortOrder: 5, showOnDesktop: true, description: "Jawaban dari ulama" },
+  { label: "Profil & Pimpinan", iconUrl: "/icons/profil-pimpinan.png", linkUrl: "/profil?tab=pengurus", sortOrder: 6, showOnDesktop: true, description: "Pimpinan MUI Jaktim" },
+  { label: "Login Anggota", iconUrl: "/icons/login-anggota.png", linkUrl: "/login", sortOrder: 7, showOnDesktop: false },
+];
+
+async function seedQuickIcons() {
+  const existing = await prisma.quickIcon.count();
+  if (existing > 0) {
+    console.log("Quick icons already seeded, skipping.");
+    return;
+  }
+  for (const item of QUICK_ICONS) {
+    await prisma.quickIcon.create({
+      data: {
+        label: item.label,
+        iconUrl: item.iconUrl,
+        linkUrl: item.linkUrl,
+        description: item.description ?? null,
+        sortOrder: item.sortOrder,
+        showOnDesktop: item.showOnDesktop,
+        showOnMobile: true,
+        active: true,
+      },
+    });
+  }
+  console.log(`Seeded ${QUICK_ICONS.length} quick_icons items.`);
+}
+
+// Kalkulator Zakat kept as a 4th desktop highlight card even though it's not in the
+// mobile icon grid (original MobileQuickAccess list didn't include it either).
+async function seedKalkulatorZakatIcon() {
+  const existing = await prisma.quickIcon.findFirst({ where: { linkUrl: "/layanan/kalkulator-zakat" } });
+  if (existing) return;
+  await prisma.quickIcon.create({
+    data: {
+      label: "Kalkulator Zakat",
+      iconUrl: "/icons/kalkulator-zakat.png",
+      linkUrl: "/layanan/kalkulator-zakat",
+      description: "Hitung zakat Anda",
+      sortOrder: 3,
+      showOnDesktop: true,
+      showOnMobile: false,
+      active: true,
+    },
+  });
+  console.log("Seeded kalkulator-zakat quick icon.");
+}
+
 async function main() {
   await seedNews();
   await seedFatwa();
@@ -212,6 +273,8 @@ async function main() {
   await seedBidangKomisi();
   await seedPengurus();
   await seedHeroSlides();
+  await seedQuickIcons();
+  await seedKalkulatorZakatIcon();
   await seedPageContent();
 }
 

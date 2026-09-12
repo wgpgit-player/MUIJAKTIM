@@ -24,6 +24,7 @@ export default async function AdminHeroSlidePage() {
         <table className="w-full text-left">
           <thead className="bg-cream text-[11.5px] uppercase text-ink-soft font-bold">
             <tr>
+              <th className="px-5 py-3">Preview</th>
               <th className="px-5 py-3">Judul</th>
               <th className="px-5 py-3">Status</th>
               <th className="px-5 py-3">Urutan</th>
@@ -33,6 +34,10 @@ export default async function AdminHeroSlidePage() {
           <tbody className="divide-y divide-line">
             {items.map((s) => (
               <tr key={s.id}>
+                <td className="px-5 py-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={s.imageUrl} alt="" className="w-20 h-12 object-cover rounded-lg border border-line" />
+                </td>
                 <td className="px-5 py-3 text-[13.5px] font-semibold text-ink">{s.title}</td>
                 <td className="px-5 py-3">
                   <span
@@ -54,7 +59,7 @@ export default async function AdminHeroSlidePage() {
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-5 py-8 text-center text-[13px] text-ink-soft">
+                <td colSpan={5} className="px-5 py-8 text-center text-[13px] text-ink-soft">
                   Belum ada hero slide.
                 </td>
               </tr>

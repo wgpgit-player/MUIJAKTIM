@@ -63,6 +63,7 @@ model Profile {
   pageContents  PageContent[]
   articles      Article[]
   pageViews     PageView[]
+  quickIcons    QuickIcon[]
   deletedComments Comment[] @relation("CommentDeletedBy")
 
   @@map("profiles")
@@ -247,4 +248,24 @@ model PageView {
   @@index([createdAt])
   @@index([userId])
   @@map("page_views")
+}
+
+/// Quick-access icon menu shown on the homepage (desktop "HighlightCards" strip and the
+/// mobile icon grid). showOnDesktop/showOnMobile let one list drive both surfaces even
+/// though the desktop strip only has room for a handful of items.
+model QuickIcon {
+  id            String   @id @default(uuid()) @db.Uuid
+  label         String
+  iconUrl       String   @map("icon_url")
+  linkUrl       String   @map("link_url")
+  description   String?
+  sortOrder     Int      @default(0) @map("sort_order")
+  showOnDesktop Boolean  @default(true) @map("show_on_desktop")
+  showOnMobile  Boolean  @default(true) @map("show_on_mobile")
+  active        Boolean  @default(true)
+  updatedBy     String?  @map("updated_by") @db.Uuid
+  updatedByProfile Profile? @relation(fields: [updatedBy], references: [id])
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("quick_icons")
 }

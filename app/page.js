@@ -15,14 +15,18 @@ import { gradientFor } from "@/lib/newsGradient";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [newsRows, heroSlides] = await Promise.all([
+  const [newsRows, heroSlides, quickIcons] = await Promise.all([
     prisma.news.findMany({
       where: { status: "PUBLISHED" },
       orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
       take: 10,
     }),
     prisma.heroSlide.findMany({ where: { active: true }, orderBy: { sortOrder: "asc" } }),
+    prisma.quickIcon.findMany({ where: { active: true }, orderBy: { sortOrder: "asc" } }),
   ]);
+
+  const desktopIcons = quickIcons.filter((i) => i.showOnDesktop);
+  const mobileIcons = quickIcons.filter((i) => i.showOnMobile);
 
   const news = newsRows.map((n) => ({
     ...n,
@@ -36,7 +40,7 @@ export default async function HomePage() {
     <div>
       {/* MOBILE — ala NU Online (ATM): tiap section berdiri sendiri, tidak ada yang mengambang */}
       <MobileHero heroImageUrl={heroSlides[0]?.imageUrl} />
-      <MobileQuickAccess />
+      <MobileQuickAccess icons={mobileIcons} />
 
       {/* MOBILE — Headline list rapat, mengikuti pola referensi persis (bukan kartu terpisah) */}
       <section className="md:hidden px-5 pt-5 pb-2">
@@ -100,7 +104,7 @@ export default async function HomePage() {
 
       {/* HIGHLIGHT FITUR — bar mengambang menembus batas hero, style kaca mengikuti hero (desktop) */}
       <div className="hidden md:block relative z-20 -mt-10 md:-mt-8 px-5 md:px-16">
-        <HighlightCards />
+        <HighlightCards icons={desktopIcons} />
       </div>
 
       {/* RUANG IKLAN — jadwal sholat sudah dipindah ke bar utilitas atas navbar */}
