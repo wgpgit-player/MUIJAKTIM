@@ -5,7 +5,7 @@ import HomeSidebar from "@/components/HomeSidebar";
 import QuoteCard from "@/components/QuoteCard";
 import HeroSlideshow from "@/components/HeroSlideshow";
 import HighlightCards from "@/components/HighlightCards";
-import AdBannerPlaceholder from "@/components/AdBannerPlaceholder";
+import AdBanner from "@/components/AdBanner";
 import MobileHero from "@/components/MobileHero";
 import MobileQuickAccess from "@/components/MobileQuickAccess";
 import MobileNewsRow from "@/components/MobileNewsRow";
@@ -110,7 +110,7 @@ export default async function HomePage() {
       {/* RUANG IKLAN — jadwal sholat sudah dipindah ke bar utilitas atas navbar */}
       <section className="hidden md:block px-5 pt-8 pb-4 md:px-16 md:pt-10 md:pb-6">
         <div className="max-w-7xl mx-auto">
-          <AdBannerPlaceholder />
+          <AdBanner placement="homepage_leaderboard" />
         </div>
       </section>
 
