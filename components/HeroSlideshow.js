@@ -2,21 +2,22 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const FALLBACK_SLIDES = [
-  "/hero/slide-1.jpg",
-  "/hero/slide-2.jpg",
-  "/hero/slide-3.jpg",
-  "/hero/slide-4.jpg",
-  "/hero/slide-5.jpg",
-  "/hero/slide-6.jpg",
-  "/hero/slide-7.jpg",
-  "/hero/slide-8.jpg",
+  { imageUrl: "/hero/slide-1.jpg", linkUrl: null },
+  { imageUrl: "/hero/slide-2.jpg", linkUrl: null },
+  { imageUrl: "/hero/slide-3.jpg", linkUrl: null },
+  { imageUrl: "/hero/slide-4.jpg", linkUrl: null },
+  { imageUrl: "/hero/slide-5.jpg", linkUrl: null },
+  { imageUrl: "/hero/slide-6.jpg", linkUrl: null },
+  { imageUrl: "/hero/slide-7.jpg", linkUrl: null },
+  { imageUrl: "/hero/slide-8.jpg", linkUrl: null },
 ];
 const INTERVAL_MS = 15000;
 
 export default function HeroSlideshow({ slides }) {
-  const SLIDES = slides && slides.length > 0 ? slides.map((s) => s.imageUrl) : FALLBACK_SLIDES;
+  const SLIDES = slides && slides.length > 0 ? slides : FALLBACK_SLIDES;
   const [active, setActive] = useState(0);
 
   const next = useCallback(() => {
@@ -34,22 +35,33 @@ export default function HeroSlideshow({ slides }) {
 
   return (
     <div className="absolute inset-0">
-      {SLIDES.map((src, i) => (
-        <div
-          key={src}
-          className="absolute inset-0 transition-opacity duration-[1500ms] ease-in-out"
-          style={{ opacity: i === active ? 1 : 0 }}
-        >
+      {SLIDES.map((slide, i) => {
+        const image = (
           <Image
-            src={src}
-            alt=""
+            src={slide.imageUrl}
+            alt={slide.title ?? ""}
             fill
             priority={i === 0}
             className="object-cover"
             sizes="100vw"
           />
-        </div>
-      ))}
+        );
+        return (
+          <div
+            key={slide.imageUrl + i}
+            className="absolute inset-0 transition-opacity duration-[1500ms] ease-in-out"
+            style={{ opacity: i === active ? 1 : 0, pointerEvents: i === active ? "auto" : "none" }}
+          >
+            {slide.linkUrl ? (
+              <Link href={slide.linkUrl} className="absolute inset-0 block">
+                {image}
+              </Link>
+            ) : (
+              image
+            )}
+          </div>
+        );
+      })}
 
       {/* soft blur + gradient for legibility, Mercury-style dreamy look */}
       <div className="absolute inset-0 backdrop-blur-[2px]" />

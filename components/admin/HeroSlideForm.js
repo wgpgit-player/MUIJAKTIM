@@ -9,13 +9,28 @@ export default function HeroSlideForm({ action, initial }) {
   return (
     <form action={action} className="flex flex-col gap-5 max-w-xl">
       <div>
-        <label className="block text-[12.5px] font-bold text-ink mb-1.5">URL Gambar</label>
+        <label className="block text-[12.5px] font-bold text-ink mb-1.5">Gambar</label>
+        {initial?.imageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={initial.imageUrl}
+            alt=""
+            className="w-full max-w-xs h-32 object-cover rounded-xl border border-line mb-2"
+          />
+        )}
         <input
-          name="imageUrl"
-          required
-          defaultValue={initial?.imageUrl}
-          className="w-full border border-line rounded-xl px-4 py-2.5 text-[13.5px] outline-none focus:border-emerald"
+          type="file"
+          name="imageFile"
+          accept="image/*"
+          required={!initial?.imageUrl}
+          className="w-full border border-line rounded-xl px-4 py-2.5 text-[13px] outline-none focus:border-emerald file:mr-3 file:rounded-lg file:border-0 file:bg-green-dk2 file:text-white file:px-3 file:py-1.5 file:text-[12px] file:font-bold"
         />
+        <p className="text-[11.5px] text-ink-soft mt-1">
+          {initial?.imageUrl
+            ? "Kosongkan kalau tidak ingin mengganti gambar."
+            : "Upload gambar (JPG/PNG), tersimpan otomatis ke Supabase Storage."}
+        </p>
+        <input type="hidden" name="currentImageUrl" value={initial?.imageUrl ?? ""} />
       </div>
       <div>
         <label className="block text-[12.5px] font-bold text-ink mb-1.5">Judul</label>
