@@ -144,12 +144,32 @@ async function seedPengurus() {
   console.log(`Seeded ${PIMPINAN_INTI.length + dewan.length} pengurus items.`);
 }
 
+async function seedHeroSlides() {
+  const existing = await prisma.heroSlide.count();
+  if (existing > 0) {
+    console.log("Hero slides already seeded, skipping.");
+    return;
+  }
+  for (let i = 1; i <= 8; i++) {
+    await prisma.heroSlide.create({
+      data: {
+        imageUrl: `/hero/slide-${i}.jpg`,
+        title: `Slide ${i}`,
+        sortOrder: i - 1,
+        active: true,
+      },
+    });
+  }
+  console.log("Seeded 8 hero slide items.");
+}
+
 async function main() {
   await seedNews();
   await seedFatwa();
   await seedFaq();
   await seedBidangKomisi();
   await seedPengurus();
+  await seedHeroSlides();
 }
 
 main()

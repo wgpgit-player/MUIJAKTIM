@@ -2,24 +2,12 @@ import NewsCard from "@/components/NewsCard";
 import ExternalNewsFeed from "@/components/ExternalNewsFeed";
 import { prisma } from "@/lib/prisma";
 import { formatDateID } from "@/lib/date";
+import { gradientFor } from "@/lib/newsGradient";
 
 export const metadata = {
   title: "Berita & Opini — MUI Jakarta Timur",
 };
 export const dynamic = "force-dynamic";
-
-const GRADIENTS = [
-  "from-green-dk2 to-green",
-  "from-emerald to-green",
-  "from-green-dk to-green",
-  "from-green-dk2 to-emerald",
-  "from-green to-green-dk",
-];
-
-function gradientFor(slug) {
-  const hash = [...slug].reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-  return GRADIENTS[hash % GRADIENTS.length];
-}
 
 export default async function BeritaPage() {
   const published = await prisma.news.findMany({

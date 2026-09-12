@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 
-const SLIDES = [
+const FALLBACK_SLIDES = [
   "/hero/slide-1.jpg",
   "/hero/slide-2.jpg",
   "/hero/slide-3.jpg",
@@ -15,7 +15,8 @@ const SLIDES = [
 ];
 const INTERVAL_MS = 15000;
 
-export default function HeroSlideshow() {
+export default function HeroSlideshow({ slides }) {
+  const SLIDES = slides && slides.length > 0 ? slides.map((s) => s.imageUrl) : FALLBACK_SLIDES;
   const [active, setActive] = useState(0);
 
   const next = useCallback(() => {

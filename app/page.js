@@ -9,11 +9,28 @@ import AdBannerPlaceholder from "@/components/AdBannerPlaceholder";
 import MobileHero from "@/components/MobileHero";
 import MobileQuickAccess from "@/components/MobileQuickAccess";
 import MobileNewsRow from "@/components/MobileNewsRow";
-import { beritaList } from "@/data/berita";
+import { prisma } from "@/lib/prisma";
+import { gradientFor } from "@/lib/newsGradient";
 
-export default function HomePage() {
-  const featured = beritaList.find((b) => b.featured) ?? beritaList[0];
-  const smallNews = beritaList.filter((b) => b.slug !== featured.slug).slice(0, 4);
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const [newsRows, heroSlides] = await Promise.all([
+    prisma.news.findMany({
+      where: { status: "PUBLISHED" },
+      orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+      take: 10,
+    }),
+    prisma.heroSlide.findMany({ where: { active: true }, orderBy: { sortOrder: "asc" } }),
+  ]);
+
+  const news = newsRows.map((n) => ({
+    ...n,
+    date: n.publishedAt ?? n.createdAt,
+    gradient: gradientFor(n.slug),
+  }));
+  const featured = news.find((b) => b.featured) ?? news[0];
+  const smallNews = featured ? news.filter((b) => b.slug !== featured.slug).slice(0, 4) : [];
 
   return (
     <div>
@@ -35,15 +52,14 @@ export default function HomePage() {
           </Link>
         </div>
         <div>
-          {[featured, ...smallNews].map((item) => (
-            <MobileNewsRow key={item.slug} item={item} />
-          ))}
+          {featured &&
+            [featured, ...smallNews].map((item) => <MobileNewsRow key={item.slug} item={item} />)}
         </div>
       </section>
 
       {/* DESKTOP HERO — full-bleed blurred slideshow, plain navbar overlay, compact top-anchored copy (Mercury-style) */}
       <section className="hidden md:flex relative overflow-hidden min-h-[560px] md:min-h-[620px] flex-col items-center justify-center text-center pb-16 md:pb-20">
-        <HeroSlideshow />
+        <HeroSlideshow slides={heroSlides} />
 
         <div className="relative z-10 w-full px-5 pt-24 md:px-8 md:pt-20">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/25 px-3.5 py-1.5 rounded-full text-lime text-[10.5px] font-bold uppercase tracking-widest mb-4">
@@ -105,7 +121,7 @@ export default function HomePage() {
 
           {/* Baris 2 — kartu berita utama + kartu kutipan, tinggi disamakan (simetris) */}
           <div className="grid md:grid-cols-[1.7fr_1fr] gap-8 items-stretch">
-            <NewsHighlight item={featured} />
+            {featured ? <NewsHighlight item={featured} /> : <div />}
             <QuoteCard />
           </div>
 
