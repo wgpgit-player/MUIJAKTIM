@@ -23,3 +23,22 @@ export async function updateDefaultLocation(formData) {
 
   revalidatePath("/admin/settings");
 }
+
+export async function updateWhatsappContact(formData) {
+  await requireRole(["SUPER_ADMIN"]);
+
+  const number = formData.get("number")?.toString().trim().replace(/[^0-9]/g, "");
+  const message = formData.get("message")?.toString().trim();
+
+  if (!number || !message) {
+    throw new Error("Nomor WhatsApp dan template pesan wajib diisi.");
+  }
+
+  await prisma.setting.upsert({
+    where: { key: "whatsapp_contact" },
+    update: { value: { number, message } },
+    create: { key: "whatsapp_contact", value: { number, message } },
+  });
+
+  revalidatePath("/admin/settings");
+}

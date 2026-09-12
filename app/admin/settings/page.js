@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/rbac";
-import { updateDefaultLocation } from "./actions";
+import { updateDefaultLocation, updateWhatsappContact } from "./actions";
 
 export const metadata = { title: "Pengaturan — Admin MUI Jakarta Timur" };
 export const dynamic = "force-dynamic";
@@ -8,11 +8,16 @@ export const dynamic = "force-dynamic";
 export default async function AdminSettingsPage() {
   await requireRole(["SUPER_ADMIN"]);
 
-  const [locationSetting] = await Promise.all([
+  const [locationSetting, whatsappSetting] = await Promise.all([
     prisma.setting.findUnique({ where: { key: "default_location" } }),
+    prisma.setting.findUnique({ where: { key: "whatsapp_contact" } }),
   ]);
 
   const loc = locationSetting?.value ?? { lat: -6.225, lon: 106.9004, label: "Jakarta Timur (default)" };
+  const wa = whatsappSetting?.value ?? {
+    number: "6281233881973",
+    message: "Assalamu'alaikum, saya ingin bertanya tentang...",
+  };
   const igConfigured = !!process.env.IG_ACCESS_TOKEN && !!process.env.IG_USER_ID;
   const cronConfigured = !!process.env.CRON_SECRET;
 
@@ -58,6 +63,43 @@ export default async function AdminSettingsPage() {
                 className="w-full border border-line rounded-xl px-4 py-2.5 text-[13.5px] outline-none focus:border-emerald"
               />
             </div>
+          </div>
+          <button
+            type="submit"
+            className="mt-2 w-fit bg-green-dk2 text-white font-bold text-[13.5px] px-6 py-3 rounded-xl hover:bg-green-dk transition-colors"
+          >
+            Simpan
+          </button>
+        </form>
+      </div>
+
+      <div className="bg-white border border-line rounded-2xl p-6 mb-6 max-w-xl">
+        <h2 className="text-[15px] font-extrabold text-ink mb-1">Kontak WhatsApp (Chat with Us)</h2>
+        <p className="text-[12.5px] text-ink-soft mb-5">
+          Dipakai oleh tombol chat mengambang di situs — tombol &quot;Chat Admin&quot; akan membuka
+          WhatsApp ke nomor ini dengan pesan awal yang sudah terisi.
+        </p>
+        <form action={updateWhatsappContact} className="flex flex-col gap-4">
+          <div>
+            <label className="block text-[12.5px] font-bold text-ink mb-1.5">Nomor WhatsApp</label>
+            <input
+              name="number"
+              required
+              placeholder="6281234567890"
+              defaultValue={wa.number}
+              className="w-full border border-line rounded-xl px-4 py-2.5 text-[13.5px] outline-none focus:border-emerald"
+            />
+            <p className="text-[11.5px] text-ink-soft mt-1">Format internasional tanpa + atau 0 di depan, mis. 6281234567890.</p>
+          </div>
+          <div>
+            <label className="block text-[12.5px] font-bold text-ink mb-1.5">Template Pesan Awal</label>
+            <textarea
+              name="message"
+              required
+              rows={2}
+              defaultValue={wa.message}
+              className="w-full border border-line rounded-xl px-4 py-2.5 text-[13.5px] outline-none focus:border-emerald"
+            />
           </div>
           <button
             type="submit"
