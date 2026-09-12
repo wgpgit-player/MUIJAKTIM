@@ -3,6 +3,7 @@ import RegisterSW from "@/components/RegisterSW";
 import Navbar from "@/components/Navbar";
 import BottomNav from "@/components/BottomNav";
 import Footer from "@/components/Footer";
+import Analytics from "@/components/Analytics";
 
 export const metadata = {
   title: "MUI Jakarta Timur",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
     <html lang="id">
       <body className="font-sans bg-cream text-ink">
         <RegisterSW />
+        <Analytics />
         <Navbar />
         <main className="pb-20 md:pb-0">{children}</main>
         <BottomNav />

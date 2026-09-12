@@ -4,6 +4,7 @@ import { getAuthedProfile } from "@/lib/rbac";
 
 const NAV = [
   { href: "/admin", label: "Dashboard", roles: ["ADMIN", "SUPER_ADMIN"] },
+  { href: "/admin/analytics", label: "Analitik", roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/admin/news", label: "Berita", roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/admin/fatwa", label: "Fatwa", roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/admin/faq", label: "Tanya Ulama", roles: ["ADMIN", "SUPER_ADMIN"] },
