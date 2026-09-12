@@ -28,3 +28,9 @@ yarn-error.log*
 *.tsbuildinfo
 
 /app/generated/prisma
+
+# editor/agent tooling — not part of the app
+.claude
+.agents
+.windsurf
+skills-lock.json
