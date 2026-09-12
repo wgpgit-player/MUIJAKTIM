@@ -35,7 +35,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* MOBILE — ala NU Online (ATM): tiap section berdiri sendiri, tidak ada yang mengambang */}
-      <MobileHero />
+      <MobileHero heroImageUrl={heroSlides[0]?.imageUrl} />
       <MobileQuickAccess />
 
       {/* MOBILE — Headline list rapat, mengikuti pola referensi persis (bukan kartu terpisah) */}
