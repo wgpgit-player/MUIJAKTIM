@@ -7,7 +7,7 @@
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, username, email, first_name, last_name, role, is_active)
+  insert into public.profiles (id, username, email, first_name, last_name, role, is_active, updated_at)
   values (
     new.id,
     coalesce(new.raw_user_meta_data->>'username', split_part(new.email, '@', 1)),
@@ -15,7 +15,8 @@ begin
     coalesce(new.raw_user_meta_data->>'first_name', ''),
     coalesce(new.raw_user_meta_data->>'last_name', ''),
     'USER',
-    true
+    true,
+    now()
   );
   return new;
 end;

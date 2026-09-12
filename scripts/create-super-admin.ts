@@ -3,8 +3,13 @@
 // If [email] is omitted, defaults to "<username>@muijaktim.or.id" (Supabase Auth
 // requires an email even though login also works via username — see app/login/actions.js).
 // Requires NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY in the environment.
-import "dotenv/config";
+import { config } from "dotenv";
 import { createClient } from "@supabase/supabase-js";
+
+// Next.js loads .env then overlays .env.local automatically; plain `dotenv` does not,
+// so load both explicitly (same pattern needed in prisma/seed.ts).
+config({ path: ".env" });
+config({ path: ".env.local", override: true });
 
 async function main() {
   const [username, password, emailArg] = process.argv.slice(2);
