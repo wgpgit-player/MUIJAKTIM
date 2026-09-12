@@ -23,6 +23,22 @@ enum FatwaCategory {
   DIREKTORI_KONTEMPORER
 }
 
+enum NewsSection {
+  KABAR_JAKARTA_TIMUR
+  OPINI_ULAMA
+  RILIS_PERS
+}
+
+enum ArticleSection {
+  DOA_DZIKIR
+  HIKMAH_AKHLAK
+  KHUTBAH_JUMAT
+  FIQIH_WANITA
+  PARENTING
+  KITAB_KAMUS
+  KITAB_TURATS
+}
+
 /// Mirror of Supabase auth.users — id MUST equal auth.users.id (managed by a DB trigger,
 /// see supabase/migrations). Prisma does not manage auth.users itself.
 model Profile {
@@ -44,6 +60,8 @@ model Profile {
   pengurus      Pengurus[]
   bidangKomisi  BidangKomisi[]
   heroSlides    HeroSlide[]
+  pageContents  PageContent[]
+  articles      Article[]
   deletedComments Comment[] @relation("CommentDeletedBy")
 
   @@map("profiles")
@@ -54,6 +72,7 @@ model News {
   slug        String        @unique
   title       String
   category    String
+  section     NewsSection   @default(KABAR_JAKARTA_TIMUR)
   excerpt     String
   body        String
   imageUrl    String?       @map("image_url")
@@ -171,4 +190,40 @@ model Setting {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("settings")
+}
+
+/// Single free-text pages edited as one block (Sejarah, Visi & Misi, info Konsultasi),
+/// as opposed to a list of items like Article/News.
+model PageContent {
+  key       String   @id
+  title     String
+  body      String
+  updatedBy String?  @map("updated_by") @db.Uuid
+  updatedByProfile Profile? @relation(fields: [updatedBy], references: [id])
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("page_content")
+}
+
+/// Generic list content for the Amalan/Kitab/Keluarga sections (doa & dzikir, hikmah &
+/// akhlak, khutbah Jumat, fiqih wanita, parenting, kamus istilah, kitab turats). Each
+/// section renders the same list->detail UI; `extra` holds section-specific structured
+/// fields (e.g. Arabic text + transliteration for a doa) without needing a table per section.
+model Article {
+  id        String         @id @default(uuid()) @db.Uuid
+  section   ArticleSection
+  slug      String
+  title     String
+  excerpt   String?
+  body      String
+  extra     Json           @default("{}")
+  sortOrder Int            @default(0) @map("sort_order")
+  status    ContentStatus  @default(DRAFT)
+  updatedBy String?        @map("updated_by") @db.Uuid
+  updatedByProfile Profile? @relation(fields: [updatedBy], references: [id])
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+
+  @@unique([section, slug])
+  @@map("articles")
 }

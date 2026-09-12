@@ -1,13 +1,16 @@
-export const metadata = { title: "Parenting Islami — MUI Jakarta Timur" };
+import ArticleListPage from "@/components/articles/ArticleListPage";
 
-import PlaceholderPage from "@/components/PlaceholderPage";
+export const metadata = { title: "Parenting Islami — MUI Jakarta Timur" };
+export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <PlaceholderPage
-      eyebrow="Amalan"
+    <ArticleListPage
+      eyebrow="Keluarga"
       title="Parenting Islami"
-      description="Tips mendidik anak dan membangun keluarga harmonis sesuai sunnah."
+      description="Panduan mendidik anak berdasarkan nilai-nilai Islam."
+      section="PARENTING"
+      basePath="/keluarga/parenting"
     />
   );
 }

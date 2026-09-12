@@ -1,13 +1,16 @@
-export const metadata = { title: "Turats (Kitab-kitab) — MUI Jakarta Timur" };
+import ArticleListPage from "@/components/articles/ArticleListPage";
 
-import PlaceholderPage from "@/components/PlaceholderPage";
+export const metadata = { title: "Kitab Turats — MUI Jakarta Timur" };
+export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <PlaceholderPage
-      eyebrow="Kitab"
-      title="Turats (Kitab-kitab)"
-      description="Direktori rujukan dan terjemahan kitab-kitab klasik/turats (salaf & khalaf)."
+    <ArticleListPage
+      eyebrow="Kitab & Referensi"
+      title="Kitab Turats"
+      description="Pengantar dan ringkasan kitab-kitab turats klasik."
+      section="KITAB_TURATS"
+      basePath="/kitab/turats"
     />
   );
 }

@@ -163,6 +163,48 @@ async function seedHeroSlides() {
   console.log("Seeded 8 hero slide items.");
 }
 
+const PAGE_CONTENT: { key: string; title: string; body: string }[] = [
+  {
+    key: "sejarah",
+    title: "Sejarah Majelis Ulama Indonesia",
+    body: [
+      "Kelahiran Majelis Ulama Indonesia (MUI) Provinsi DKI Jakarta termasuk unik. Ia lahir pada tanggal 13 Februari 1975, sekitar lima bulan lebih awal dibanding MUI Pusat yang lahir pada 17 Rajab 1395 H, bertepatan dengan 26 Juli 1975. Meski lahir mendahului organisasi induknya, MUI Provinsi DKI Jakarta tetap berhubungan secara organisatoris dan historis dengan MUI Pusat.",
+      "Pendirian MUI dilatarbelakangi kesadaran kolektif umat Islam bahwa Indonesia memerlukan landasan kokoh bagi pembangunan masyarakat yang maju dan berakhlak. Sebelum MUI resmi berdiri, serangkaian pertemuan ulama dan tokoh Islam digelar untuk mematangkan gagasan sebuah majelis ulama yang menjalankan fungsi ijtihad kolektif serta memberi nasihat keagamaan kepada pemerintah dan masyarakat, di antaranya konferensi Pusat Dakwah Islam pada 30 September sampai 4 Oktober 1970 dan lokakarya mubaligh nasional pada 26 sampai 29 November 1974.",
+      "Puncaknya, pada tanggal 21 sampai 27 Juli 1975 digelar Musyawarah Nasional Majelis Ulama Indonesia di Jakarta, dihadiri utusan majelis ulama daerah, pengurus pusat organisasi Islam, ulama independen, dan wakil ABRI. Lima puluh tiga peserta menandatangani deklarasi pendirian MUI. Mengikuti semangat itu, pada Mei 1975 hampir seluruh daerah tingkat Kabupaten dan Provinsi, termasuk Jakarta Timur, turut membentuk Majelis Ulama di wilayahnya masing-masing.",
+    ].join("\n\n"),
+  },
+  {
+    key: "visi",
+    title: "Visi",
+    body: "Terwujudnya umat Islam Jakarta Timur yang berakhlak mulia, moderat, dan berdaya, di bawah bimbingan ulama yang amanah.",
+  },
+  {
+    key: "misi",
+    title: "Misi",
+    body: [
+      "Menjadi rujukan fatwa dan bimbingan keagamaan yang kredibel bagi umat.",
+      "Menguatkan ukhuwah islamiyah dan moderasi beragama di tengah masyarakat.",
+      "Menjadi mitra strategis pemerintah dalam pembinaan kehidupan beragama.",
+    ].join("\n"),
+  },
+  {
+    key: "konsultasi-info",
+    title: "Konsultasi Keluarga",
+    body: "Layanan konsultasi keluarga MUI Jakarta Timur sedang disiapkan. Untuk sementara, silakan hubungi Sekretariat MUI Jakarta Timur untuk permohonan konsultasi.",
+  },
+];
+
+async function seedPageContent() {
+  for (const p of PAGE_CONTENT) {
+    await prisma.pageContent.upsert({
+      where: { key: p.key },
+      update: {},
+      create: p,
+    });
+  }
+  console.log(`Seeded ${PAGE_CONTENT.length} page_content items.`);
+}
+
 async function main() {
   await seedNews();
   await seedFatwa();
@@ -170,6 +212,7 @@ async function main() {
   await seedBidangKomisi();
   await seedPengurus();
   await seedHeroSlides();
+  await seedPageContent();
 }
 
 main()

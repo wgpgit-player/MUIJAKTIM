@@ -1,13 +1,16 @@
-export const metadata = { title: "Teks Khutbah Jumat — MUI Jakarta Timur" };
+import ArticleListPage from "@/components/articles/ArticleListPage";
 
-import PlaceholderPage from "@/components/PlaceholderPage";
+export const metadata = { title: "Khutbah Jumat — MUI Jakarta Timur" };
+export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <PlaceholderPage
-      eyebrow="Amalan"
-      title="Teks Khutbah Jumat"
-      description="Bank naskah khutbah berkualitas dan menyejukkan yang siap diedit."
+    <ArticleListPage
+      eyebrow="Amalan Harian"
+      title="Khutbah Jumat"
+      description="Naskah khutbah Jumat siap pakai untuk khatib."
+      section="KHUTBAH_JUMAT"
+      basePath="/amalan/khutbah-jumat"
     />
   );
 }

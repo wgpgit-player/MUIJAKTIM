@@ -19,13 +19,20 @@ export async function createNews(formData) {
 
   const title = formData.get("title")?.toString().trim();
   const category = formData.get("category")?.toString().trim();
+  const section = formData.get("section")?.toString();
   const excerpt = formData.get("excerpt")?.toString().trim();
   const body = formData.get("body")?.toString().trim();
   const status = formData.get("status")?.toString() === "PUBLISHED" ? "PUBLISHED" : "DRAFT";
   const featured = formData.get("featured") === "on";
 
-  if (!title || !category || !excerpt || !body) {
-    throw new Error("Semua field wajib diisi.");
+  if (
+    !title ||
+    !category ||
+    !excerpt ||
+    !body ||
+    !["KABAR_JAKARTA_TIMUR", "OPINI_ULAMA", "RILIS_PERS"].includes(section)
+  ) {
+    throw new Error("Semua field wajib diisi dengan benar.");
   }
 
   let slug = slugify(title);
@@ -37,6 +44,7 @@ export async function createNews(formData) {
       slug,
       title,
       category,
+      section,
       excerpt,
       body,
       featured,
@@ -56,13 +64,20 @@ export async function updateNews(id, formData) {
 
   const title = formData.get("title")?.toString().trim();
   const category = formData.get("category")?.toString().trim();
+  const section = formData.get("section")?.toString();
   const excerpt = formData.get("excerpt")?.toString().trim();
   const body = formData.get("body")?.toString().trim();
   const status = formData.get("status")?.toString() === "PUBLISHED" ? "PUBLISHED" : "DRAFT";
   const featured = formData.get("featured") === "on";
 
-  if (!title || !category || !excerpt || !body) {
-    throw new Error("Semua field wajib diisi.");
+  if (
+    !title ||
+    !category ||
+    !excerpt ||
+    !body ||
+    !["KABAR_JAKARTA_TIMUR", "OPINI_ULAMA", "RILIS_PERS"].includes(section)
+  ) {
+    throw new Error("Semua field wajib diisi dengan benar.");
   }
 
   const current = await prisma.news.findUnique({ where: { id } });
@@ -73,6 +88,7 @@ export async function updateNews(id, formData) {
     data: {
       title,
       category,
+      section,
       excerpt,
       body,
       featured,

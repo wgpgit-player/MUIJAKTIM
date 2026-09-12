@@ -1,13 +1,16 @@
-export const metadata = { title: "Fiqih Wanita (Muslimah) — MUI Jakarta Timur" };
+import ArticleListPage from "@/components/articles/ArticleListPage";
 
-import PlaceholderPage from "@/components/PlaceholderPage";
+export const metadata = { title: "Fiqih Wanita — MUI Jakarta Timur" };
+export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <PlaceholderPage
-      eyebrow="Amalan"
-      title="Fiqih Wanita (Muslimah)"
-      description="Hukum syariat khusus perempuan (haid, aurat, perhiasan, dan lainnya)."
+    <ArticleListPage
+      eyebrow="Keluarga"
+      title="Fiqih Wanita"
+      description="Panduan fikih seputar kehidupan perempuan muslimah."
+      section="FIQIH_WANITA"
+      basePath="/keluarga/fiqih-wanita"
     />
   );
 }

@@ -1,13 +1,15 @@
-export const metadata = { title: "Kabar Jakarta Timur — MUI Jakarta Timur" };
+import NewsSectionPage from "@/components/berita/NewsSectionPage";
 
-import PlaceholderPage from "@/components/PlaceholderPage";
+export const metadata = { title: "Kabar Jakarta Timur — MUI Jakarta Timur" };
+export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <PlaceholderPage
+    <NewsSectionPage
       eyebrow="Berita & Opini"
       title="Kabar Jakarta Timur"
       description="Liputan acara, kegiatan, dan berita keagamaan lokal di wilayah Jakarta Timur."
+      section="KABAR_JAKARTA_TIMUR"
     />
   );
 }

@@ -1,13 +1,16 @@
-export const metadata = { title: "Kamus — MUI Jakarta Timur" };
+import ArticleListPage from "@/components/articles/ArticleListPage";
 
-import PlaceholderPage from "@/components/PlaceholderPage";
+export const metadata = { title: "Kamus Istilah — MUI Jakarta Timur" };
+export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <PlaceholderPage
-      eyebrow="Kitab"
-      title="Kamus"
-      description="Kamus Arab-Indonesia, Inggris-Indonesia, dan glosarium istilah teknis keagamaan."
+    <ArticleListPage
+      eyebrow="Kitab & Referensi"
+      title="Kamus Istilah"
+      description="Penjelasan istilah-istilah keislaman yang sering dijumpai."
+      section="KITAB_KAMUS"
+      basePath="/kitab/kamus"
     />
   );
 }

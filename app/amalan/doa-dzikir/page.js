@@ -1,13 +1,16 @@
-export const metadata = { title: "Doa & Dzikir — MUI Jakarta Timur" };
+import ArticleListPage from "@/components/articles/ArticleListPage";
 
-import PlaceholderPage from "@/components/PlaceholderPage";
+export const metadata = { title: "Doa & Dzikir — MUI Jakarta Timur" };
+export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <PlaceholderPage
-      eyebrow="Amalan"
+    <ArticleListPage
+      eyebrow="Amalan Harian"
       title="Doa & Dzikir"
-      description="Kumpulan doa harian dan dzikir rutin sesuai tuntunan."
+      description="Kumpulan doa dan dzikir harian sesuai tuntunan."
+      section="DOA_DZIKIR"
+      basePath="/amalan/doa-dzikir"
     />
   );
 }

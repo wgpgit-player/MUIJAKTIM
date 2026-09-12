@@ -1,13 +1,16 @@
-export const metadata = { title: "Hikmah & Akhlak — MUI Jakarta Timur" };
+import ArticleListPage from "@/components/articles/ArticleListPage";
 
-import PlaceholderPage from "@/components/PlaceholderPage";
+export const metadata = { title: "Hikmah & Akhlak — MUI Jakarta Timur" };
+export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <PlaceholderPage
-      eyebrow="Amalan"
+    <ArticleListPage
+      eyebrow="Amalan Harian"
       title="Hikmah & Akhlak"
-      description="Kisah teladan, nasehat bijak, dan materi penyucian jiwa."
+      description="Renungan dan hikmah untuk membentuk akhlak mulia."
+      section="HIKMAH_AKHLAK"
+      basePath="/amalan/hikmah-akhlak"
     />
   );
 }

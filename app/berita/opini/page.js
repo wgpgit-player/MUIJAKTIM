@@ -1,13 +1,15 @@
-export const metadata = { title: "Opini Ulama — MUI Jakarta Timur" };
+import NewsSectionPage from "@/components/berita/NewsSectionPage";
 
-import PlaceholderPage from "@/components/PlaceholderPage";
+export const metadata = { title: "Opini Ulama — MUI Jakarta Timur" };
+export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <PlaceholderPage
+    <NewsSectionPage
       eyebrow="Berita & Opini"
       title="Opini Ulama"
       description="Tulisan dan pandangan ulama terkait isu-isu sosial-keagamaan terkini."
+      section="OPINI_ULAMA"
     />
   );
 }

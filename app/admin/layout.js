@@ -10,6 +10,8 @@ const NAV = [
   { href: "/admin/pengurus", label: "Pengurus", roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/admin/bidang-komisi", label: "Bidang/Komisi", roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/admin/hero-slide", label: "Hero Slide", roles: ["ADMIN", "SUPER_ADMIN"] },
+  { href: "/admin/page-content", label: "Halaman Statis", roles: ["ADMIN", "SUPER_ADMIN"] },
+  { href: "/admin/articles", label: "Artikel", roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/admin/comments", label: "Komentar", roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/admin/users", label: "Pengguna", roles: ["SUPER_ADMIN"] },
   { href: "/admin/settings", label: "Pengaturan", roles: ["SUPER_ADMIN"] },

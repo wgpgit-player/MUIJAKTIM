@@ -32,15 +32,21 @@ export default async function BeritaPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-5 md:px-16 py-6 flex gap-2.5 overflow-x-auto">
-        {["Semua", "Kabar Jakarta Timur", "Opini Ulama", "Rilis Pers & Makumat"].map((f, i) => (
-          <div
-            key={f}
-            className={`flex-shrink-0 px-4 py-2.5 rounded-full text-[13px] font-bold ${
-              i === 0 ? "bg-green-dk text-white" : "bg-white border border-line text-ink-soft"
+        {[
+          { label: "Semua", href: "/berita", active: true },
+          { label: "Kabar Jakarta Timur", href: "/berita/kabar-jakarta-timur" },
+          { label: "Opini Ulama", href: "/berita/opini" },
+          { label: "Rilis Pers & Maklumat", href: "/berita/rilis-pers" },
+        ].map((f) => (
+          <a
+            key={f.label}
+            href={f.href}
+            className={`flex-shrink-0 px-4 py-2.5 rounded-full text-[13px] font-bold transition-colors ${
+              f.active ? "bg-green-dk text-white" : "bg-white border border-line text-ink-soft hover:border-green-dk hover:text-green-dk"
             }`}
           >
-            {f}
-          </div>
+            {f.label}
+          </a>
         ))}
       </div>
 

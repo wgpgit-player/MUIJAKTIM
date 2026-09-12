@@ -32,52 +32,27 @@ function TabIcon({ tab, className }) {
   );
 }
 
-function Sejarah() {
+function Sejarah({ sejarah, bidangList }) {
+  const paragraphs = (sejarah?.body ?? "").split(/\n\s*\n/).filter(Boolean);
+
   return (
     <div>
-      <h2 className="text-[19px] md:text-[22px] font-extrabold text-green-dk2 mb-4">Sejarah Majelis Ulama Indonesia</h2>
+      <h2 className="text-[19px] md:text-[22px] font-extrabold text-green-dk2 mb-4">
+        {sejarah?.title ?? "Sejarah Majelis Ulama Indonesia"}
+      </h2>
 
-      <p className="text-[14.5px] leading-relaxed text-ink-soft mb-4">
-        Kelahiran Majelis Ulama Indonesia (MUI) Provinsi DKI Jakarta termasuk unik. Ia lahir pada tanggal 13
-        Februari 1975, sekitar lima bulan lebih awal dibanding MUI Pusat yang lahir pada 17 Rajab 1395 H,
-        bertepatan dengan 26 Juli 1975. Meski lahir mendahului organisasi induknya, MUI Provinsi DKI Jakarta tetap
-        berhubungan secara organisatoris dan historis dengan MUI Pusat.
-      </p>
-      <p className="text-[14.5px] leading-relaxed text-ink-soft mb-4">
-        Pendirian MUI dilatarbelakangi kesadaran kolektif umat Islam bahwa Indonesia memerlukan landasan kokoh bagi
-        pembangunan masyarakat yang maju dan berakhlak. Sebelum MUI resmi berdiri, serangkaian pertemuan ulama dan
-        tokoh Islam digelar untuk mematangkan gagasan sebuah majelis ulama yang menjalankan fungsi ijtihad
-        kolektif serta memberi nasihat keagamaan kepada pemerintah dan masyarakat, di antaranya konferensi Pusat
-        Dakwah Islam pada 30 September sampai 4 Oktober 1970 dan lokakarya mubaligh nasional pada 26 sampai 29
-        November 1974.
-      </p>
-      <p className="text-[14.5px] leading-relaxed text-ink-soft mb-8">
-        Puncaknya, pada tanggal 21 sampai 27 Juli 1975 digelar Musyawarah Nasional Majelis Ulama Indonesia di
-        Jakarta, dihadiri utusan majelis ulama daerah, pengurus pusat organisasi Islam, ulama independen, dan
-        wakil ABRI. Lima puluh tiga peserta menandatangani deklarasi pendirian MUI. Mengikuti semangat itu, pada
-        Mei 1975 hampir seluruh daerah tingkat Kabupaten dan Provinsi, termasuk Jakarta Timur, turut membentuk
-        Majelis Ulama di wilayahnya masing-masing.
-      </p>
+      {paragraphs.map((p, i) => (
+        <p key={i} className="text-[14.5px] leading-relaxed text-ink-soft mb-4">
+          {p}
+        </p>
+      ))}
 
-      <div className="text-[12px] font-bold uppercase tracking-wide text-emerald mb-3">Bidang Kerja MUI Jakarta Timur</div>
+      <div className="text-[12px] font-bold uppercase tracking-wide text-emerald mb-3 mt-4">Bidang Kerja MUI Jakarta Timur</div>
       <div className="grid sm:grid-cols-2 gap-3">
-        {[
-          "Fatwa",
-          "Dakwah &amp; Pengembangan Masyarakat",
-          "Pemberdayaan Ekonomi Umat",
-          "Pendidikan &amp; Kaderisasi",
-          "Perempuan, Remaja &amp; Keluarga",
-          "Hukum &amp; Perundang-undangan",
-          "Kajian Penelitian",
-          "Pembinaan Seni Budaya Islam",
-          "Informasi &amp; Komunikasi",
-          "Ukhuwah Islamiyah &amp; KUB",
-        ].map((text, i) => (
-          <div
-            key={i}
-            className="border border-line rounded-lg px-4 py-3.5 text-[13.5px] text-ink-soft"
-            dangerouslySetInnerHTML={{ __html: text }}
-          />
+        {bidangList.map((b) => (
+          <div key={b.slug} className="border border-line rounded-lg px-4 py-3.5 text-[13.5px] text-ink-soft">
+            {b.nama}
+          </div>
         ))}
       </div>
 
@@ -92,24 +67,19 @@ function Sejarah() {
   );
 }
 
-function VisiMisi() {
+function VisiMisi({ visi, misi }) {
+  const misiItems = (misi?.body ?? "").split("\n").filter(Boolean);
+
   return (
     <div>
       <h2 className="text-[19px] md:text-[22px] font-extrabold text-green-dk2 mb-5">Visi &amp; Misi</h2>
 
       <div className="text-[12px] font-bold uppercase tracking-wide text-emerald mb-2">Visi</div>
-      <p className="text-[15px] leading-relaxed font-semibold text-ink mb-7">
-        Terwujudnya umat Islam Jakarta Timur yang berakhlak mulia, moderat, dan berdaya, di bawah bimbingan ulama
-        yang amanah.
-      </p>
+      <p className="text-[15px] leading-relaxed font-semibold text-ink mb-7">{visi?.body}</p>
 
       <div className="text-[12px] font-bold uppercase tracking-wide text-emerald mb-3">Misi</div>
       <div className="flex flex-col gap-3">
-        {[
-          "Menjadi rujukan fatwa dan bimbingan keagamaan yang kredibel bagi umat.",
-          "Menguatkan ukhuwah islamiyah dan moderasi beragama di tengah masyarakat.",
-          "Menjadi mitra strategis pemerintah dalam pembinaan kehidupan beragama.",
-        ].map((text, i) => (
+        {misiItems.map((text, i) => (
           <div key={i} className="flex gap-3 items-start">
             <div className="w-6 h-6 rounded-full bg-emerald/10 text-green text-[12px] font-extrabold flex items-center justify-center flex-shrink-0">
               {i + 1}
@@ -219,7 +189,7 @@ function Pengurus({ pimpinanInti, dewanPertimbangan, bidangList }) {
   );
 }
 
-export default function ProfilClient({ initialTab, pimpinanInti, dewanPertimbangan, bidangList }) {
+export default function ProfilClient({ initialTab, pimpinanInti, dewanPertimbangan, bidangList, sejarah, visi, misi }) {
   const [tab, setTab] = useState(TABS.some((t) => t.key === initialTab) ? initialTab : "sejarah");
 
   const tabLabel = TABS.find((t) => t.key === tab)?.label ?? "Sejarah Singkat";
@@ -267,8 +237,8 @@ export default function ProfilClient({ initialTab, pimpinanInti, dewanPertimbang
         </div>
 
         <div className="bg-white border border-line rounded-lg p-6 md:p-8">
-          {tab === "sejarah" && <Sejarah />}
-          {tab === "visi-misi" && <VisiMisi />}
+          {tab === "sejarah" && <Sejarah sejarah={sejarah} bidangList={bidangList} />}
+          {tab === "visi-misi" && <VisiMisi visi={visi} misi={misi} />}
           {tab === "pengurus" && (
             <Pengurus pimpinanInti={pimpinanInti} dewanPertimbangan={dewanPertimbangan} bidangList={bidangList} />
           )}

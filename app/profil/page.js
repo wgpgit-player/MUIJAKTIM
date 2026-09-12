@@ -12,10 +12,13 @@ export default async function ProfilPage({ searchParams }) {
   const params = await searchParams;
   const initialTab = params?.tab ?? "sejarah";
 
-  const [allPengurus, bidangList] = await Promise.all([
+  const [allPengurus, bidangList, pageContentRows] = await Promise.all([
     prisma.pengurus.findMany({ orderBy: { sortOrder: "asc" } }),
     prisma.bidangKomisi.findMany({ orderBy: { name: "asc" } }),
+    prisma.pageContent.findMany({ where: { key: { in: ["sejarah", "visi", "misi"] } } }),
   ]);
+
+  const pageContentByKey = Object.fromEntries(pageContentRows.map((p) => [p.key, p]));
 
   const pimpinanInti = allPengurus
     .filter((p) => PIMPINAN_INTI_POSITIONS.includes(p.position))
@@ -42,6 +45,9 @@ export default async function ProfilPage({ searchParams }) {
       pimpinanInti={pimpinanInti}
       dewanPertimbangan={dewanPertimbangan}
       bidangList={bidangListPlain}
+      sejarah={pageContentByKey.sejarah}
+      visi={pageContentByKey.visi}
+      misi={pageContentByKey.misi}
     />
   );
 }
