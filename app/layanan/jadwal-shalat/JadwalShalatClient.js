@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { formatDateID } from "@/lib/date";
 import QiblaCompass from "@/components/compass/QiblaCompass";
+import { useGeolocation, GEO_ERROR_MESSAGES } from "@/lib/useGeolocation";
 
 const PRAYER_KEYS = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
 const PRAYER_LABELS = {
@@ -26,8 +27,7 @@ function formatCountdown(ms) {
 }
 
 export default function JadwalShalatClient() {
-  const [loc, setLoc] = useState(DEFAULT_LOC);
-  const [locStatus, setLocStatus] = useState("idle"); // idle | loading | done | error
+  const { loc, status: locStatus, errorReason, request: useMyLocation } = useGeolocation(DEFAULT_LOC);
   const [timings, setTimings] = useState(null);
   const [hijriDate, setHijriDate] = useState(null);
   const [status, setStatus] = useState("loading"); // loading | done | error
@@ -76,22 +76,6 @@ export default function JadwalShalatClient() {
       cancelled = true;
     };
   }, [loc]);
-
-  const useMyLocation = () => {
-    if (!navigator.geolocation) {
-      setLocStatus("error");
-      return;
-    }
-    setLocStatus("loading");
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLoc({ lat: pos.coords.latitude, lon: pos.coords.longitude, label: "Lokasi Anda saat ini" });
-        setLocStatus("done");
-      },
-      () => setLocStatus("error"),
-      { timeout: 8000 }
-    );
-  };
 
   // Minta lokasi otomatis saat halaman dibuka, supaya jadwal & kiblat langsung akurat
   // tanpa perlu klik manual. Kalau ditolak/gagal, tetap fallback ke DEFAULT_LOC.
@@ -154,6 +138,13 @@ export default function JadwalShalatClient() {
               {locStatus === "loading" ? "Mencari lokasi…" : "Gunakan Lokasi Saya"}
             </button>
           </div>
+
+          {locStatus === "error" && (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-4 text-[12.5px] text-amber-800 leading-relaxed">
+              {GEO_ERROR_MESSAGES[errorReason] ?? "Gagal mendapatkan lokasi."} Menampilkan jadwal untuk{" "}
+              <strong>{DEFAULT_LOC.label}</strong>.
+            </div>
+          )}
 
           {status === "loading" && (
             <div className="bg-white rounded-2xl border border-line p-8 text-center text-ink-soft text-[13px]">

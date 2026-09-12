@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useGeolocation, GEO_ERROR_MESSAGES } from "@/lib/useGeolocation";
 
-const DEFAULT_LOC = { lat: -6.225, lon: 106.9004, label: "Jakarta Timur" };
+const DEFAULT_LOC = { lat: -6.225, lon: 106.9004, label: "Jakarta Timur (default)" };
 
 const ITEMS = [
   { key: "Imsak", label: "Imsak" },
@@ -14,7 +15,7 @@ const ITEMS = [
 ];
 
 export default function PrayerScheduleBar() {
-  const [loc, setLoc] = useState(DEFAULT_LOC);
+  const { loc, status: locStatus, errorReason, request: requestLocation } = useGeolocation(DEFAULT_LOC);
   const [timings, setTimings] = useState(null);
   const [now, setNow] = useState(new Date());
 
@@ -24,12 +25,8 @@ export default function PrayerScheduleBar() {
   }, []);
 
   useEffect(() => {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      (pos) => setLoc({ lat: pos.coords.latitude, lon: pos.coords.longitude, label: "Lokasi Anda saat ini" }),
-      () => {},
-      { timeout: 8000 }
-    );
+    requestLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -87,8 +84,18 @@ export default function PrayerScheduleBar() {
         <div>
           <div className="text-white font-extrabold text-[15px] md:text-[16px]">Jadwal Sholat {loc.label}</div>
           <p className="text-white/60 text-[12px] md:text-[12.5px] leading-relaxed mt-1">
-            Menampilkan jadwal sholat fardu harian berdasarkan lokasi Anda saat ini. Diperbarui secara otomatis.
+            {locStatus === "loading"
+              ? "Mencari lokasi Anda…"
+              : "Menampilkan jadwal sholat fardu harian berdasarkan lokasi Anda saat ini. Diperbarui secara otomatis."}
           </p>
+          {locStatus === "error" && (
+            <p className="text-[11.5px] text-amber-200 mt-1.5 leading-relaxed">
+              {GEO_ERROR_MESSAGES[errorReason] ?? "Gagal mendapatkan lokasi."} Menampilkan jadwal {DEFAULT_LOC.label}.{" "}
+              <button onClick={requestLocation} className="underline font-bold hover:text-white">
+                Coba lagi
+              </button>
+            </p>
+          )}
         </div>
       </div>
 
