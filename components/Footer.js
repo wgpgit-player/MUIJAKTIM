@@ -94,13 +94,13 @@ export default function Footer() {
               </svg>
               <span className="leading-relaxed">{ADDRESS}</span>
             </div>
-            <a href={`tel:${PHONE.replace(/-/g, "")}`} className="flex items-center gap-2.5 hover:text-lime">
+            <a href={`tel:${PHONE.replace(/-/g, "")}`} className="flex items-center gap-2.5 text-white/75 hover:text-lime">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A8E063" strokeWidth="2" className="shrink-0">
                 <path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8Z" />
               </svg>
               {PHONE}
             </a>
-            <a href={`mailto:${EMAIL}`} className="flex items-center gap-2.5 hover:text-lime">
+            <a href={`mailto:${EMAIL}`} className="flex items-center gap-2.5 text-white/75 hover:text-lime">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A8E063" strokeWidth="2" className="shrink-0">
                 <rect x="3" y="5" width="18" height="14" rx="2.5" />
                 <path d="m4 7 8 6 8-6" />

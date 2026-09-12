@@ -1,24 +1,64 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useGeolocation } from "@/lib/useGeolocation";
 
-const SCHEDULE = [
-  { label: "Subuh", time: "04:37" },
-  { label: "Dzuhur", time: "11:55", active: true },
-  { label: "Ashar", time: "15:12" },
-  { label: "Maghrib", time: "17:55" },
-  { label: "Isya", time: "19:04" },
+const DEFAULT_LOC = { lat: -6.225, lon: 106.9004, label: "Jakarta Timur (default)" };
+const SCHEDULE_ITEMS = [
+  { key: "Fajr", label: "Subuh" },
+  { key: "Dhuhr", label: "Dzuhur" },
+  { key: "Asr", label: "Ashar" },
+  { key: "Maghrib", label: "Maghrib" },
+  { key: "Isha", label: "Isya" },
 ];
 
 export default function TopUtilityBar() {
+  const { loc, request: requestLocation } = useGeolocation(DEFAULT_LOC);
   const [dateStr, setDateStr] = useState("");
+  const [timings, setTimings] = useState(null);
+  const [now, setNow] = useState(new Date());
 
   useEffect(() => {
     setDateStr(
       new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
     );
+    const t = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(t);
   }, []);
+
+  useEffect(() => {
+    requestLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/prayer-times?lat=${loc.lat}&lon=${loc.lon}`, { signal: AbortSignal.timeout(8000) })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled && data.ok) setTimings(data.timings);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [loc]);
+
+  const activeKey = useMemo(() => {
+    if (!timings) return null;
+    const todayStr = now.toDateString();
+    const entries = SCHEDULE_ITEMS.map(({ key }) => {
+      const raw = timings[key];
+      if (!raw) return null;
+      const [h, m] = raw.split(":").map(Number);
+      const d = new Date(todayStr);
+      d.setHours(h, m, 0, 0);
+      return { key, time: d };
+    }).filter(Boolean);
+    const upcoming = entries.find((e) => e.time.getTime() > now.getTime());
+    return (upcoming ?? entries[entries.length - 1])?.key ?? null;
+  }, [timings, now]);
 
   return (
     <div className="hidden md:flex items-center justify-between bg-green-dk2 px-8 h-9 text-[11.5px] text-white/80">
@@ -28,7 +68,7 @@ export default function TopUtilityBar() {
             <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z" />
             <circle cx="12" cy="9" r="2.5" />
           </svg>
-          Jakarta Timur
+          {loc.label}
         </span>
         {dateStr && (
           <span className="flex items-center gap-1.5">
@@ -46,9 +86,9 @@ export default function TopUtilityBar() {
           <Image src="/icons/jadwal-shalat.png" alt="" width={14} height={14} className="object-contain" />
           Jadwal Sholat:
         </span>
-        {SCHEDULE.map((s) => (
-          <span key={s.label} className={`flex items-center gap-1 ${s.active ? "text-lime font-bold" : ""}`}>
-            {s.label} {s.time}
+        {SCHEDULE_ITEMS.map((s) => (
+          <span key={s.key} className={`flex items-center gap-1 ${s.key === activeKey ? "text-lime font-bold" : ""}`}>
+            {s.label} {timings ? timings[s.key] ?? "--:--" : "--:--"}
           </span>
         ))}
       </div>
