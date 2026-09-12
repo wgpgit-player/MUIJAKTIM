@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { FAQ, searchFaq } from "./faq-data";
+import { searchFaq } from "@/lib/searchFaq";
 
 const WELCOME = {
   role: "bot",
@@ -10,7 +10,7 @@ const WELCOME = {
     "Assalamu'alaikum. Saya asisten tanya-jawab fikih sehari-hari MUI Jakarta Timur. Silakan tulis pertanyaan Anda (mis. \"kapan waktu bayar zakat fitrah\"), atau pilih salah satu pertanyaan populer di bawah.",
 };
 
-export default function TanyaUlamaClient() {
+export default function TanyaUlamaClient({ faqList }) {
   const [messages, setMessages] = useState([WELCOME]);
   const [input, setInput] = useState("");
   const scrollRef = useRef(null);
@@ -22,7 +22,7 @@ export default function TanyaUlamaClient() {
   const ask = (question) => {
     const q = question.trim();
     if (!q) return;
-    const results = searchFaq(q);
+    const results = searchFaq(q, faqList);
     const botMsg =
       results.length > 0
         ? {
@@ -105,7 +105,7 @@ export default function TanyaUlamaClient() {
 
           {messages.length <= 1 && (
             <div className="px-4 md:px-5 pb-3 flex flex-wrap gap-2">
-              {FAQ.slice(0, 4).map((f) => (
+              {faqList.slice(0, 4).map((f) => (
                 <button
                   key={f.q}
                   onClick={() => ask(f.q)}

@@ -19,12 +19,13 @@ function readFields(formData) {
   const number = formData.get("number")?.toString().trim() || null;
   const category = formData.get("category")?.toString();
   const body = formData.get("body")?.toString().trim();
+  const pdfUrl = formData.get("pdfUrl")?.toString().trim() || null;
   const status = formData.get("status")?.toString() === "PUBLISHED" ? "PUBLISHED" : "DRAFT";
 
   if (!title || !body || !["MUAMALAH", "IBADAH_KESEHATAN", "DIREKTORI_KONTEMPORER"].includes(category)) {
     throw new Error("Semua field wajib diisi dengan benar.");
   }
-  return { title, number, category, body, status };
+  return { title, number, category, body, pdfUrl, status };
 }
 
 export async function createFatwa(formData) {
@@ -35,7 +36,14 @@ export async function createFatwa(formData) {
   const existing = await prisma.fatwa.findUnique({ where: { slug } });
   if (existing) slug = `${slug}-${Date.now().toString(36)}`;
 
-  await prisma.fatwa.create({ data: { ...fields, slug, updatedBy: profile.id } });
+  await prisma.fatwa.create({
+    data: {
+      ...fields,
+      slug,
+      publishedAt: fields.status === "PUBLISHED" ? new Date() : null,
+      updatedBy: profile.id,
+    },
+  });
 
   revalidatePath("/admin/fatwa");
   revalidatePath("/fatwa");
@@ -45,8 +53,16 @@ export async function createFatwa(formData) {
 export async function updateFatwa(id, formData) {
   const profile = await requireRole(["ADMIN", "SUPER_ADMIN"]);
   const fields = readFields(formData);
+  const current = await prisma.fatwa.findUnique({ where: { id } });
 
-  await prisma.fatwa.update({ where: { id }, data: { ...fields, updatedBy: profile.id } });
+  await prisma.fatwa.update({
+    where: { id },
+    data: {
+      ...fields,
+      publishedAt: fields.status === "PUBLISHED" ? current?.publishedAt ?? new Date() : null,
+      updatedBy: profile.id,
+    },
+  });
 
   revalidatePath("/admin/fatwa");
   revalidatePath("/fatwa");

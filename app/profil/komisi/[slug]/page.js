@@ -1,33 +1,36 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BIDANG_LIST, getBidangBySlug, totalAnggota } from "../../bidang-data";
+import { prisma } from "@/lib/prisma";
 
-export function generateStaticParams() {
-  return BIDANG_LIST.map((b) => ({ slug: b.slug }));
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const b = await prisma.bidangKomisi.findUnique({ where: { slug } });
+  return { title: b ? `${b.name} — MUI Jakarta Timur` : "Bidang & Komisi — MUI Jakarta Timur" };
 }
 
-export function generateMetadata({ params }) {
-  const b = getBidangBySlug(params.slug);
-  return { title: b ? `${b.nama} — MUI Jakarta Timur` : "Bidang & Komisi — MUI Jakarta Timur" };
-}
+export default async function KomisiDetailPage({ params }) {
+  const { slug } = await params;
+  const b = await prisma.bidangKomisi.findUnique({ where: { slug } });
+  if (!b) notFound();
 
-export default function KomisiDetailPage({ params }) {
-  const b = getBidangBySlug(params.slug);
-  if (!b) return notFound();
+  const members = Array.isArray(b.members) ? b.members : [];
+  const total = 2 + members.length;
 
   const rows = [
-    { nama: b.ketua, jabatan: "Ketua Bidang" },
-    { nama: b.sekretaris, jabatan: "Sekretaris Bidang" },
-    ...b.anggota.map((a) => ({ nama: a, jabatan: "Anggota" })),
-  ];
+    b.chairName && { nama: b.chairName, jabatan: "Ketua Bidang" },
+    b.secretaryName && { nama: b.secretaryName, jabatan: "Sekretaris Bidang" },
+    ...members.map((a) => ({ nama: a, jabatan: "Anggota" })),
+  ].filter(Boolean);
 
   return (
     <div>
       <div className="bg-green-dk2 px-5 py-10 md:px-16 md:py-14 text-center">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-[22px] md:text-[30px] font-extrabold text-white leading-snug">{b.nama}</h1>
+          <h1 className="text-[22px] md:text-[30px] font-extrabold text-white leading-snug">{b.name}</h1>
           <p className="text-white/70 text-[13.5px] md:text-[14.5px] mt-3">
-            Total {totalAnggota(b)} Anggota Terdaftar
+            Total {total} Anggota Terdaftar
           </p>
         </div>
       </div>
@@ -38,7 +41,7 @@ export default function KomisiDetailPage({ params }) {
           <span>&rsaquo;</span>
           <Link href="/profil/komisi" className="hover:text-green-dk2">Bidang & Komisi</Link>
           <span>&rsaquo;</span>
-          <span className="text-green-dk2 font-bold">{b.nama}</span>
+          <span className="text-green-dk2 font-bold">{b.name}</span>
         </div>
       </div>
 

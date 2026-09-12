@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { BIDANG_LIST, totalAnggota, PIMPINAN_INTI, DEWAN_PERTIMBANGAN } from "./bidang-data";
 
 const TABS = [
   { key: "sejarah", label: "Sejarah Singkat" },
@@ -146,7 +145,7 @@ function BidangDirectoryCard({ b }) {
           Ketua: <span className="font-semibold text-ink">{b.ketua}</span>
         </div>
         <div className="text-[11.5px] text-ink-soft mt-1.5">
-          Total <span className="font-bold text-emerald">{totalAnggota(b)}</span> anggota terdaftar
+          Total <span className="font-bold text-emerald">{2 + b.members.length}</span> anggota terdaftar
         </div>
       </div>
       <Link
@@ -159,7 +158,7 @@ function BidangDirectoryCard({ b }) {
   );
 }
 
-function Pengurus() {
+function Pengurus({ pimpinanInti, dewanPertimbangan, bidangList }) {
   return (
     <div>
       <h2 className="text-[19px] md:text-[22px] font-extrabold text-green-dk2 mb-1">Susunan Pengurus</h2>
@@ -170,7 +169,7 @@ function Pengurus() {
 
       <div className="text-[12px] font-bold uppercase tracking-wide text-emerald mb-3">Pimpinan Inti</div>
       <div className="grid md:grid-cols-2 gap-4 mb-8">
-        {PIMPINAN_INTI.map((p, i) => (
+        {pimpinanInti.map((p, i) => (
           <PersonCard key={i} nama={p.nama} jabatan={p.jabatan} />
         ))}
       </div>
@@ -180,20 +179,20 @@ function Pengurus() {
         <div className="grid sm:grid-cols-3 gap-5 text-[13.5px] mb-4">
           <div>
             <div className="text-[10.5px] font-bold uppercase tracking-wide text-ink-soft mb-1">Ketua</div>
-            <div className="font-semibold">{DEWAN_PERTIMBANGAN.ketua}</div>
+            <div className="font-semibold">{dewanPertimbangan.ketua}</div>
           </div>
           <div>
             <div className="text-[10.5px] font-bold uppercase tracking-wide text-ink-soft mb-1">Wakil Ketua</div>
-            <div className="font-semibold">{DEWAN_PERTIMBANGAN.wakilKetua}</div>
+            <div className="font-semibold">{dewanPertimbangan.wakilKetua}</div>
           </div>
           <div>
             <div className="text-[10.5px] font-bold uppercase tracking-wide text-ink-soft mb-1">Sekretaris</div>
-            <div className="font-semibold">{DEWAN_PERTIMBANGAN.sekretaris}</div>
+            <div className="font-semibold">{dewanPertimbangan.sekretaris}</div>
           </div>
         </div>
         <div className="text-[10.5px] font-bold uppercase tracking-wide text-ink-soft mb-1.5">Anggota</div>
         <div className="grid sm:grid-cols-2 gap-x-6 text-[13.5px] font-semibold leading-relaxed text-ink">
-          {DEWAN_PERTIMBANGAN.anggota.map((a, i) => (
+          {dewanPertimbangan.anggota.map((a, i) => (
             <div key={i}>{a}</div>
           ))}
         </div>
@@ -206,7 +205,7 @@ function Pengurus() {
         </Link>
       </div>
       <div className="flex flex-col gap-3">
-        {BIDANG_LIST.map((b) => (
+        {bidangList.map((b) => (
           <BidangDirectoryCard key={b.slug} b={b} />
         ))}
       </div>
@@ -220,7 +219,7 @@ function Pengurus() {
   );
 }
 
-export default function ProfilClient({ initialTab }) {
+export default function ProfilClient({ initialTab, pimpinanInti, dewanPertimbangan, bidangList }) {
   const [tab, setTab] = useState(TABS.some((t) => t.key === initialTab) ? initialTab : "sejarah");
 
   const tabLabel = TABS.find((t) => t.key === tab)?.label ?? "Sejarah Singkat";
@@ -270,7 +269,9 @@ export default function ProfilClient({ initialTab }) {
         <div className="bg-white border border-line rounded-lg p-6 md:p-8">
           {tab === "sejarah" && <Sejarah />}
           {tab === "visi-misi" && <VisiMisi />}
-          {tab === "pengurus" && <Pengurus />}
+          {tab === "pengurus" && (
+            <Pengurus pimpinanInti={pimpinanInti} dewanPertimbangan={dewanPertimbangan} bidangList={bidangList} />
+          )}
         </div>
       </div>
     </div>

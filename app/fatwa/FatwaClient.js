@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { CATEGORIES, FATWA_LIST } from "./fatwa-data";
+import { CATEGORIES } from "./fatwa-data";
 
 function DocIcon() {
   return (
@@ -16,12 +16,12 @@ function DocIcon() {
 
 const CAT_LABEL = Object.fromEntries(CATEGORIES.filter((c) => c.key !== "semua").map((c) => [c.key, c.label]));
 
-export default function FatwaClient() {
+export default function FatwaClient({ fatwaList }) {
   const [cat, setCat] = useState("semua");
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
-    return FATWA_LIST.filter((f) => {
+    return fatwaList.filter((f) => {
       if (cat !== "semua" && f.category !== cat) return false;
       if (query.trim()) {
         const q = query.toLowerCase();
@@ -29,12 +29,12 @@ export default function FatwaClient() {
       }
       return true;
     });
-  }, [cat, query]);
+  }, [cat, query, fatwaList]);
 
-  const total = FATWA_LIST.length;
-  const countIbadah = FATWA_LIST.filter((f) => f.category === "ibadah").length;
-  const countMuamalah = FATWA_LIST.filter((f) => f.category === "muamalah").length;
-  const countKontemporer = FATWA_LIST.filter((f) => f.category === "kontemporer").length;
+  const total = fatwaList.length;
+  const countIbadah = fatwaList.filter((f) => f.category === "ibadah").length;
+  const countMuamalah = fatwaList.filter((f) => f.category === "muamalah").length;
+  const countKontemporer = fatwaList.filter((f) => f.category === "kontemporer").length;
 
   return (
     <div>

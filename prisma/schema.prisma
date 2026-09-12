@@ -69,17 +69,19 @@ model News {
 }
 
 model Fatwa {
-  id        String        @id @default(uuid()) @db.Uuid
-  slug      String        @unique
-  number    String?
-  title     String
-  category  FatwaCategory
-  body      String
-  status    ContentStatus @default(DRAFT)
-  updatedBy String?       @map("updated_by") @db.Uuid
+  id          String        @id @default(uuid()) @db.Uuid
+  slug        String        @unique
+  number      String?
+  title       String
+  category    FatwaCategory
+  body        String
+  pdfUrl      String?       @map("pdf_url")
+  publishedAt DateTime?     @map("published_at")
+  status      ContentStatus @default(DRAFT)
+  updatedBy   String?       @map("updated_by") @db.Uuid
   updatedByProfile Profile? @relation(fields: [updatedBy], references: [id])
-  createdAt DateTime      @default(now()) @map("created_at")
-  updatedAt DateTime      @updatedAt @map("updated_at")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
 
   @@map("fatwa")
 }
@@ -89,6 +91,7 @@ model FaqTanyaUlama {
   question  String
   answer    String
   category  String
+  keywords  Json          @default("[]")
   sortOrder Int           @default(0) @map("sort_order")
   status    ContentStatus @default(DRAFT)
   updatedBy String?       @map("updated_by") @db.Uuid
@@ -119,6 +122,7 @@ model BidangKomisi {
   name        String
   description String
   chairName   String?  @map("chair_name")
+  secretaryName String? @map("secretary_name")
   members     Json     @default("[]")
   updatedBy   String?  @map("updated_by") @db.Uuid
   updatedByProfile Profile? @relation(fields: [updatedBy], references: [id])

@@ -59,6 +59,15 @@ export default function FatwaForm({ action, initial }) {
         <input type="hidden" name="category" value={category} />
       </div>
       <div>
+        <label className="block text-[12.5px] font-bold text-ink mb-1.5">URL PDF (opsional)</label>
+        <input
+          name="pdfUrl"
+          defaultValue={initial?.pdfUrl ?? ""}
+          placeholder="https://..."
+          className="w-full border border-line rounded-xl px-4 py-2.5 text-[13.5px] outline-none focus:border-emerald"
+        />
+      </div>
+      <div>
         <label className="block text-[12.5px] font-bold text-ink mb-1.5">Isi Fatwa</label>
         <textarea
           name="body"

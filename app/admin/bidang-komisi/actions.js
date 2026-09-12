@@ -18,6 +18,7 @@ function readFields(formData) {
   const name = formData.get("name")?.toString().trim();
   const description = formData.get("description")?.toString().trim();
   const chairName = formData.get("chairName")?.toString().trim() || null;
+  const secretaryName = formData.get("secretaryName")?.toString().trim() || null;
   const membersRaw = formData.get("members")?.toString().trim() || "[]";
 
   if (!name || !description) {
@@ -32,7 +33,7 @@ function readFields(formData) {
     throw new Error('Anggota harus berupa JSON array, mis. ["Nama A", "Nama B"].');
   }
 
-  return { name, description, chairName, members };
+  return { name, description, chairName, secretaryName, members };
 }
 
 export async function createBidangKomisi(formData) {

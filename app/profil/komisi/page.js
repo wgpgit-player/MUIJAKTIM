@@ -1,9 +1,17 @@
 import Link from "next/link";
-import { BIDANG_LIST, totalAnggota } from "../bidang-data";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = { title: "Bidang & Komisi — MUI Jakarta Timur" };
+export const dynamic = "force-dynamic";
 
-export default function KomisiPage() {
+function totalAnggota(b) {
+  // Ketua + Sekretaris + daftar anggota
+  return 2 + (Array.isArray(b.members) ? b.members.length : 0);
+}
+
+export default async function KomisiPage() {
+  const bidangList = await prisma.bidangKomisi.findMany({ orderBy: { name: "asc" } });
+
   return (
     <div>
       <div className="bg-green-dk2 px-5 py-10 md:px-16 md:py-14 text-center">
@@ -31,7 +39,7 @@ export default function KomisiPage() {
           Daftar Bidang / Komisi
         </div>
         <div className="grid sm:grid-cols-2 gap-5">
-          {BIDANG_LIST.map((b) => (
+          {bidangList.map((b) => (
             <div
               key={b.slug}
               className="relative overflow-hidden rounded-2xl p-6 bg-gradient-to-br from-emerald to-green-dk2 shadow-[0_16px_32px_-14px_rgba(11,77,51,0.45)]"
@@ -55,7 +63,7 @@ export default function KomisiPage() {
               </div>
 
               <div className="relative max-w-[75%]">
-                <div className="font-extrabold text-[16px] text-white leading-snug mb-4">{b.nama}</div>
+                <div className="font-extrabold text-[16px] text-white leading-snug mb-4">{b.name}</div>
 
                 <div className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/15 pl-3 pr-1 py-1 mb-5">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D9F27A" strokeWidth="2" className="shrink-0">
@@ -80,6 +88,9 @@ export default function KomisiPage() {
               </Link>
             </div>
           ))}
+          {bidangList.length === 0 && (
+            <p className="text-[13px] text-ink-soft col-span-2">Belum ada data bidang/komisi.</p>
+          )}
         </div>
 
         <p className="text-[11.5px] text-ink-soft mt-8 leading-relaxed">

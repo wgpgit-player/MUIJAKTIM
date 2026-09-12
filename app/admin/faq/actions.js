@@ -11,11 +11,15 @@ function readFields(formData) {
   const category = formData.get("category")?.toString().trim();
   const sortOrder = parseInt(formData.get("sortOrder")?.toString() || "0", 10) || 0;
   const status = formData.get("status")?.toString() === "PUBLISHED" ? "PUBLISHED" : "DRAFT";
+  const keywordsRaw = formData.get("keywords")?.toString().trim() || "";
+  const keywords = keywordsRaw
+    ? keywordsRaw.split(",").map((k) => k.trim()).filter(Boolean)
+    : [];
 
   if (!question || !answer || !category) {
     throw new Error("Semua field wajib diisi.");
   }
-  return { question, answer, category, sortOrder, status };
+  return { question, answer, category, sortOrder, status, keywords };
 }
 
 export async function createFaq(formData) {
