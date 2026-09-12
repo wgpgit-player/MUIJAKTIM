@@ -13,6 +13,7 @@ const NAV = [
   { href: "/admin/hero-slide", label: "Hero Slide", roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/admin/quick-icons", label: "Icon", roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/admin/ads", label: "Iklan", roles: ["ADMIN", "SUPER_ADMIN"] },
+  { href: "/admin/knowledge", label: "Tanya AI", roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/admin/page-content", label: "Halaman Statis", roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/admin/articles", label: "Artikel", roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/admin/comments", label: "Komentar", roles: ["ADMIN", "SUPER_ADMIN"] },

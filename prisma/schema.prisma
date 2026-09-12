@@ -65,6 +65,7 @@ model Profile {
   pageViews     PageView[]
   quickIcons    QuickIcon[]
   advertisements Advertisement[]
+  knowledgeDocuments KnowledgeDocument[]
   deletedComments Comment[] @relation("CommentDeletedBy")
 
   @@map("profiles")
@@ -292,4 +293,40 @@ model Advertisement {
 
   @@index([placement])
   @@map("advertisements")
+}
+
+enum KnowledgeStatus {
+  PROCESSING
+  READY
+  ERROR
+}
+
+/// A single uploaded .md/.pdf file for the "Tanya AI" chat widget's knowledge base.
+/// Text is extracted once on upload and split into KnowledgeChunk rows for search —
+/// see lib/searchKnowledge.js. No external AI API is used (free, keyword-based).
+model KnowledgeDocument {
+  id        String          @id @default(uuid()) @db.Uuid
+  title     String
+  fileUrl   String          @map("file_url")
+  fileType  String          @map("file_type") // "md" | "pdf"
+  status    KnowledgeStatus @default(PROCESSING)
+  errorMessage String?      @map("error_message")
+  uploadedBy String?        @map("uploaded_by") @db.Uuid
+  uploadedByProfile Profile? @relation(fields: [uploadedBy], references: [id])
+  createdAt DateTime        @default(now()) @map("created_at")
+
+  chunks    KnowledgeChunk[]
+
+  @@map("knowledge_documents")
+}
+
+model KnowledgeChunk {
+  id         String            @id @default(uuid()) @db.Uuid
+  documentId String            @map("document_id") @db.Uuid
+  document   KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  content    String
+  sortOrder  Int               @default(0) @map("sort_order")
+
+  @@index([documentId])
+  @@map("knowledge_chunks")
 }

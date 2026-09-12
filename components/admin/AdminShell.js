@@ -31,6 +31,8 @@ function NavIcon({ label, className }) {
       return <svg {...common}><circle cx="12" cy="12" r="8" /><path d="M12 8v4l2.5 2.5" /></svg>;
     case "Iklan":
       return <svg {...common}><path d="M3 10v4h4l6 4V6L7 10Z" /><path d="M17 8a5 5 0 0 1 0 8" /></svg>;
+    case "Tanya AI":
+      return <svg {...common}><path d="M12 2a7 7 0 0 0-7 7c0 3 1.5 4.7 2 6-.2.9-.7 2-1.5 3 1.3.2 2.5-.1 3.5-.7A7 7 0 1 0 12 2Z" /></svg>;
     case "Halaman Statis":
       return <svg {...common}><path d="M4 19.5V6a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v13" /><path d="M4 19.5A1.5 1.5 0 0 1 5.5 18H19" /><path d="M8 7h7M8 10.5h7" /></svg>;
     case "Artikel":
