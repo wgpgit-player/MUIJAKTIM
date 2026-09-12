@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import TopUtilityBar from "./TopUtilityBar";
+import { createClient } from "@/lib/supabase/client";
 
 const MENU = [
   {
@@ -111,6 +112,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     if (!isHome) return;
@@ -119,6 +121,16 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [isHome]);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data }) => setIsLoggedIn(!!data.session));
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => setIsLoggedIn(!!session));
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  const accountHref = isLoggedIn ? "/profil/akun" : "/login";
+  const accountLabel = isLoggedIn ? "Akun Saya" : "Login";
 
   // Homepage: transparent over the hero, becomes a fixed glass bar once scrolled past it.
   if (isHome) {
@@ -150,14 +162,14 @@ export default function Navbar() {
           </nav>
 
           <Link
-            href="/login"
+            href={accountHref}
             className={`shrink-0 rounded-full px-4 py-1.5 text-[12px] font-bold transition-colors ${
               scrolled
                 ? "bg-green-dk2 text-white hover:bg-green-dk"
                 : "bg-white text-green-dk2 hover:bg-lime"
             }`}
           >
-            Login
+            {accountLabel}
           </Link>
         </div>
         </div>
@@ -186,10 +198,10 @@ export default function Navbar() {
         </nav>
 
         <Link
-          href="/login"
+          href={accountHref}
           className="shrink-0 rounded-full border-[1.5px] border-green-dk text-green-dk px-4 py-1.5 text-[12.5px] font-bold hover:bg-green-dk hover:text-white transition-colors"
         >
-          Login
+          {accountLabel}
         </Link>
       </div>
       </header>

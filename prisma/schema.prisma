@@ -28,6 +28,7 @@ enum FatwaCategory {
 model Profile {
   id        String   @id @db.Uuid
   username  String   @unique
+  email     String   @unique
   firstName String   @map("first_name")
   lastName  String   @map("last_name")
   avatarUrl String?  @map("avatar_url")
