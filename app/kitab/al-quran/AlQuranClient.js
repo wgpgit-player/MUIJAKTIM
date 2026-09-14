@@ -12,6 +12,9 @@ export default function AlQuranClient() {
   const [detail, setDetail] = useState(null);
   const [detailStatus, setDetailStatus] = useState("loading");
   const [ayatFilter, setAyatFilter] = useState("");
+  // Mobile only: master-detail drill-down instead of stacking both columns (which used
+  // to force scrolling past the entire 114-surat list before reaching any ayat).
+  const [mobileView, setMobileView] = useState("list"); // list | detail
 
   useEffect(() => {
     let cancelled = false;
@@ -88,8 +91,11 @@ export default function AlQuranClient() {
 
       <div className="max-w-7xl mx-auto px-5 md:px-8 py-6 md:py-8">
         <div className="grid md:grid-cols-[300px_1fr] gap-5 md:gap-6 items-start">
-          {/* Kiri: daftar surat, kecil & bisa discroll */}
-          <div className="bg-white border border-line rounded-2xl overflow-hidden md:sticky md:top-6">
+          {/* Kiri: daftar surat, kecil & bisa discroll. Di mobile: layar penuh, disembunyikan
+              begitu 1 surat dipilih (lihat mobileView). */}
+          <div
+            className={`${mobileView === "detail" ? "hidden" : "block"} md:block bg-white border border-line rounded-2xl overflow-hidden md:sticky md:top-6`}
+          >
             <div className="p-3 border-b border-line">
               <input
                 type="text"
@@ -99,7 +105,7 @@ export default function AlQuranClient() {
                 className="w-full border border-line rounded-lg px-3 py-2 text-[13px] outline-none focus:border-green-dk transition-colors"
               />
             </div>
-            <div className="max-h-[70vh] md:max-h-[560px] overflow-y-auto divide-y divide-line">
+            <div className="max-h-[65vh] md:max-h-[560px] overflow-y-auto divide-y divide-line">
               {listStatus === "loading" && (
                 <div className="p-4 text-[12.5px] text-ink-soft text-center">Memuat daftar surat…</div>
               )}
@@ -109,7 +115,10 @@ export default function AlQuranClient() {
               {filteredSuratList.map((s) => (
                 <button
                   key={s.nomor}
-                  onClick={() => setSelected(s.nomor)}
+                  onClick={() => {
+                    setSelected(s.nomor);
+                    setMobileView("detail");
+                  }}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-left transition-colors ${
                     selected === s.nomor ? "bg-green-dk2 text-white" : "hover:bg-cream text-ink"
                   }`}
@@ -140,8 +149,17 @@ export default function AlQuranClient() {
             </div>
           </div>
 
-          {/* Kanan: ayat + terjemahan */}
-          <div>
+          {/* Kanan: ayat + terjemahan. Di mobile: layar penuh, cuma tampil setelah pilih surat. */}
+          <div className={`${mobileView === "list" ? "hidden" : "block"} md:block`}>
+            <button
+              onClick={() => setMobileView("list")}
+              className="md:hidden flex items-center gap-1.5 text-[13px] font-bold text-green-dk mb-3"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+                <path d="m15 6-6 6 6 6" />
+              </svg>
+              Daftar Surat
+            </button>
             {detailStatus === "loading" && (
               <div className="bg-white rounded-2xl border border-line p-10 text-center text-ink-soft text-[13px]">
                 Memuat ayat…
