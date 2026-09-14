@@ -242,6 +242,11 @@ model PageView {
   userId    String?  @map("user_id") @db.Uuid
   userProfile Profile? @relation(fields: [userId], references: [id])
   visitorId String   @map("visitor_id")
+  /// Client IP (from x-forwarded-for), used to count unique "kunjungan"/sessions the
+  /// way Shopify's traffic report does (1 IP = 1 visit, separate from raw page-view
+  /// count). Null for rows written before this field existed, and for local dev
+  /// requests where no proxy header is present.
+  ip        String?
   referrer  String?
   userAgent String?  @map("user_agent")
   createdAt DateTime @default(now()) @map("created_at")
@@ -249,6 +254,7 @@ model PageView {
   @@index([path])
   @@index([createdAt])
   @@index([userId])
+  @@index([ip])
   @@map("page_views")
 }
 

@@ -1,9 +1,16 @@
 // Lightweight first-party page-view logger. Called from components/Analytics.js on
-// every client-side navigation. Deliberately does NOT store IP addresses — visitors
-// are distinguished only by a random id in a first-party cookie, which is enough to
-// answer "how many distinct visitors / which logged-in users" without being invasive.
+// every client-side navigation. Captures the client IP (from the proxy headers Vercel
+// sets) so the admin dashboard can count unique "kunjungan"/sessions the way Shopify's
+// traffic report does (1 IP = 1 visit) while still keeping every individual page load
+// as its own row for the separate page-view count.
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
+
+function getClientIp(request) {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  if (forwardedFor) return forwardedFor.split(",")[0].trim();
+  return request.headers.get("x-real-ip") || null;
+}
 
 export async function POST(request) {
   try {
@@ -21,6 +28,7 @@ export async function POST(request) {
         referrer: referrer ? String(referrer).slice(0, 500) : null,
         userAgent: userAgent ? String(userAgent).slice(0, 300) : null,
         visitorId: String(visitorId).slice(0, 100),
+        ip: getClientIp(request),
         userId: user?.id ?? null,
       },
     });
