@@ -20,6 +20,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
+        arabic: ["Amiri", "Traditional Arabic", "serif"],
       },
       borderRadius: {
         xl2: "20px",
