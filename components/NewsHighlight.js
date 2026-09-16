@@ -7,7 +7,15 @@ export default function NewsHighlight({ item }) {
       href={`/berita/${item.slug}`}
       className="block bg-white border border-line rounded-2xl overflow-hidden group"
     >
-      <div className={`relative h-[220px] md:h-[280px] bg-gradient-to-br ${item.gradient} overflow-hidden`}>
+      <div
+        className={`relative h-[220px] md:h-[280px] overflow-hidden ${
+          item.imageUrl ? "" : `bg-gradient-to-br ${item.gradient}`
+        }`}
+      >
+        {item.imageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={item.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
         <span className="absolute top-4 left-4 text-[11px] font-bold px-3 py-1.5 rounded-full bg-lime text-green-dk2">
           {item.category}

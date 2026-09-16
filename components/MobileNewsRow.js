@@ -11,7 +11,12 @@ export default function MobileNewsRow({ item }) {
         </span>
         <div className="text-[13px] font-semibold leading-snug text-ink line-clamp-2">{item.title}</div>
       </div>
-      <div className={`w-16 h-16 shrink-0 rounded-lg bg-gradient-to-br ${item.gradient}`} />
+      {item.imageUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={item.imageUrl} alt="" className="w-16 h-16 shrink-0 rounded-lg object-cover" />
+      ) : (
+        <div className={`w-16 h-16 shrink-0 rounded-lg bg-gradient-to-br ${item.gradient}`} />
+      )}
     </Link>
   );
 }
