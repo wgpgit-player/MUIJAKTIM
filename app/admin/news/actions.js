@@ -2,10 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/rbac";
-import { uploadMedia } from "@/lib/uploadMedia";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import DOMPurify from "isomorphic-dompurify";
 
 function slugify(title) {
   return title
@@ -16,7 +14,10 @@ function slugify(title) {
     .replace(/(^-|-$)/g, "");
 }
 
-function sanitizeBody(html) {
+async function sanitizeBody(html) {
+  // Loaded lazily (not as a top-level import) so viewing/deleting news doesn't
+  // pull jsdom into that route's bundle — only create/update actually need it.
+  const { default: DOMPurify } = await import("isomorphic-dompurify");
   return DOMPurify.sanitize(html ?? "", {
     ALLOWED_TAGS: [
       "p", "br", "strong", "em", "u", "s", "h2", "h3", "ul", "ol", "li",
@@ -35,7 +36,7 @@ async function readFields(formData) {
   const category = formData.get("category")?.toString().trim();
   const section = formData.get("section")?.toString();
   const excerpt = formData.get("excerpt")?.toString().trim();
-  const body = sanitizeBody(formData.get("body")?.toString().trim());
+  const body = await sanitizeBody(formData.get("body")?.toString().trim());
   const status = formData.get("status")?.toString() === "PUBLISHED" ? "PUBLISHED" : "DRAFT";
   const featured = formData.get("featured") === "on";
   const currentImageUrl = formData.get("currentImageUrl")?.toString().trim() || null;
@@ -53,6 +54,7 @@ async function readFields(formData) {
   let imageUrl = currentImageUrl;
   const file = formData.get("imageFile");
   if (file instanceof File && file.size > 0) {
+    const { uploadMedia } = await import("@/lib/uploadMedia");
     imageUrl = await uploadMedia(file, "news");
   }
 
