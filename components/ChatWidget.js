@@ -111,6 +111,8 @@ export default function ChatWidget() {
   const panelRef = useRef(null);
   const launcherRef = useRef(null);
   const pathname = usePathname();
+  const [pastHero, setPastHero] = useState(false);
+  useEffect(()=>{if(pathname!=="/")return;const check=()=>{const hero=document.querySelector(".home-hero");setPastHero(!hero || !hero.getClientRects().length || hero.getBoundingClientRect().bottom <= 80);};check();window.addEventListener("scroll",check,{passive:true});return()=>window.removeEventListener("scroll",check);},[pathname]);
 
   useEffect(() => {
     fetch("/api/settings/whatsapp-contact", { signal: AbortSignal.timeout(5000) })
@@ -129,7 +131,7 @@ export default function ChatWidget() {
 
   useEffect(() => { setOpen(false); }, [pathname]);
   useEffect(() => { if(!open)return; panelRef.current?.querySelector('button')?.focus(); const onKey=e=>{if(e.key==='Escape'){setOpen(false);launcherRef.current?.focus();}}; document.addEventListener('keydown',onKey); return()=>document.removeEventListener('keydown',onKey); }, [open]);
-  if(pathname?.startsWith('/layanan/tanya-ulama') || pathname?.startsWith('/layanan/jadwal-shalat')) return null;
+  if((pathname === '/' && !pastHero) || pathname?.startsWith('/layanan/tanya-ulama') || pathname?.startsWith('/layanan/jadwal-shalat')) return null;
   const waHref = `https://wa.me/${wa.number}?text=${encodeURIComponent(wa.message)}`;
 
   return (

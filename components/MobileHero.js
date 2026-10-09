@@ -74,8 +74,7 @@ export default function MobileHero({ heroImageUrl }) {
     <section className="md:hidden relative overflow-hidden rounded-b-2xl pt-6 pb-10 px-5">
       <div className="absolute inset-0">
         <Image src={heroImageUrl || "/hero/slide-1.jpg"} alt="" fill priority className="object-cover" sizes="100vw" />
-        <div className="absolute inset-0 bg-green-dk2/70" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/70" />
+        <div className="absolute inset-0 bg-black/60 pointer-events-none" />
       </div>
 
       <h1 className="relative z-10 text-white font-bold text-[24px] leading-tight mb-6">Rumah Fatwa &amp; Dakwah Jakarta Timur</h1>

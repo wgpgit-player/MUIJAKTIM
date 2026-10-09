@@ -53,16 +53,17 @@ export default function AdminBar() {
 
   if (hidden) {
     return (
-      <button
+      <div className="flex justify-end border-b border-line bg-cream px-5"><button
         onClick={unhide}
         aria-label="Tampilkan bar admin"
-        className="fixed bottom-40 md:bottom-24 right-5 z-[60] w-11 h-11 rounded-full bg-green-dk2/90 backdrop-blur-xl border border-white/20 text-lime shadow-lg flex items-center justify-center hover:bg-green-dk transition-colors"
+        className="min-h-[44px] inline-flex items-center gap-2 text-[12px] font-semibold text-green-dk2 px-3"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M12 20h9" />
           <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
         </svg>
-      </button>
+        <span>Tampilkan kontrol admin</span>
+      </button></div>
     );
   }
 

@@ -3,7 +3,7 @@ import NewsHighlight from "@/components/NewsHighlight";
 import NewsSmallCard from "@/components/NewsSmallCard";
 import HomeSidebar from "@/components/HomeSidebar";
 import QuoteCard from "@/components/QuoteCard";
-import HeroSlideshow from "@/components/HeroSlideshow";
+import HeroBanner from "@/components/HeroBanner";
 import HighlightCards from "@/components/HighlightCards";
 import AdBanner from "@/components/AdBanner";
 import MobileHero from "@/components/MobileHero";
@@ -25,7 +25,13 @@ export default async function HomePage() {
     prisma.quickIcon.findMany({ where: { active: true }, orderBy: { sortOrder: "asc" } }),
   ]);
 
-  const desktopIcons = quickIcons.filter((i) => i.showOnDesktop);
+  const configuredDesktopIcons = quickIcons.filter((i) => i.showOnDesktop);
+  const desktopIcons = configuredDesktopIcons.length ? configuredDesktopIcons : [
+    { id: "zakat", label: "Kalkulator Zakat", description: "Hitung zakat Anda", linkUrl: "/layanan/kalkulator-zakat", iconUrl: "/icons/kalkulator-zakat.png" },
+    { id: "fatwa", label: "Fiqih & Fatwa", description: "Kumpulan fatwa MUI", linkUrl: "/fatwa", iconUrl: "/icons/fatwa.png" },
+    { id: "layanan", label: "Layanan Umat", description: "Jawaban dari ulama", linkUrl: "/layanan", iconUrl: "/icons/layanan-umat.png" },
+    { id: "profil", label: "Profil & Pimpinan", description: "Pimpinan MUI Jaktim", linkUrl: "/profil", iconUrl: "/icons/profil-pimpinan.png" },
+  ];
   const mobileIcons = quickIcons.filter((i) => i.showOnMobile);
 
   const news = newsRows.map((n) => ({
@@ -62,15 +68,12 @@ export default async function HomePage() {
       </section>
 
       {/* DESKTOP HERO — full-bleed blurred slideshow, plain navbar overlay, compact top-anchored copy (Mercury-style) */}
-      <section className="hidden md:flex relative overflow-hidden min-h-[560px] md:min-h-[620px] flex-col items-center justify-center text-center pb-16 md:pb-20">
-        <HeroSlideshow slides={heroSlides} />
+      <section className="home-hero hidden md:flex relative overflow-hidden min-h-[540px] flex-col items-center justify-center text-center pt-14 pb-28">
+        <HeroBanner slide={heroSlides[0]} />
 
-        <div className="relative z-10 w-full px-5 pt-24 md:px-8 md:pt-20">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl border border-white/25 px-3.5 py-1.5 rounded-full text-lime text-[10.5px] font-bold uppercase tracking-widest mb-4">
-            #MUIJAKTIM
-          </div>
+        <div className="relative z-10 w-full px-8">
           <h1 className="max-w-2xl mx-auto text-[30px] md:text-[48px] leading-[1.1] font-extrabold text-white tracking-tight mb-3">
-            Rumah Fatwa &amp; Dakwah Jakarta Timur
+            Rumah Fatwa &amp; Dakwah <span className="block">Jakarta Timur</span>
           </h1>
           <p className="max-w-md mx-auto text-white/75 text-[13px] md:text-[14.5px] leading-relaxed mb-6">
             Menghimpun ulama, zuama, dan cendekiawan muslim untuk membimbing, membina, dan melayani umat
@@ -80,21 +83,22 @@ export default async function HomePage() {
           {/* CTA — kaca/glass, iOS-style */}
           <form
             action="/fatwa"
-            className="max-w-md mx-auto flex items-center gap-2 bg-white/15 backdrop-blur-xl border border-white/30 rounded-full p-2 pl-5 shadow-[0_8px_32px_rgba(0,0,0,0.25)]"
+            className="hero-search max-w-xl mx-auto flex items-center gap-3 bg-cream border border-white/40 rounded-xl p-2 pl-5"
           >
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" className="shrink-0">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0b4d33" strokeWidth="2" className="shrink-0">
               <circle cx="11" cy="11" r="7" />
               <path d="m21 21-4.3-4.3" />
             </svg>
             <input
-              type="text"
+              type="search"
+              aria-label="Cari judul atau nomor fatwa"
               name="q"
               placeholder="Cari fatwa, mis. zakat penghasilan..."
-              className="flex-1 bg-transparent outline-none text-[13px] text-white placeholder:text-white/60 py-2"
+              className="min-w-0 flex-1 bg-transparent outline-none text-[15px] text-ink placeholder:text-ink-soft py-2"
             />
             <button
               type="submit"
-              className="shrink-0 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 text-white font-bold text-[12.5px] px-5 py-2.5 hover:bg-white/30 transition-colors"
+              className="shrink-0 rounded-lg bg-green-dk2 text-white font-bold text-[14px] px-5 py-2.5 hover:bg-green-dk transition-colors"
             >
               Cari Fatwa
             </button>
@@ -103,7 +107,7 @@ export default async function HomePage() {
       </section>
 
       {/* HIGHLIGHT FITUR — bar mengambang menembus batas hero, style kaca mengikuti hero (desktop) */}
-      <div className="hidden md:block relative z-20 -mt-10 md:-mt-8 px-5 md:px-16">
+      <div className="home-quick-access hidden md:block relative z-20 -mt-8 px-5 md:px-16">
         <HighlightCards icons={desktopIcons} />
       </div>
 
@@ -152,3 +156,4 @@ export default async function HomePage() {
     </div>
   );
 }
+
