@@ -11,7 +11,7 @@ module.exports = {
         "green-dk2": "#083C28",
         "green-dk": "#0B4D33",
         green: "#0F6B45",
-        emerald: "#17A374",
+        emerald: "#0F6B45",
         lime: "#C8F049",
         cream: "#FAF8F1",
         ink: "#10241C",

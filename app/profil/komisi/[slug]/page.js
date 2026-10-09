@@ -1,3 +1,4 @@
+import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -26,26 +27,9 @@ export default async function KomisiDetailPage({ params }) {
 
   return (
     <div>
-      <div className="bg-green-dk2 px-5 py-10 md:px-16 md:py-14 text-center">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-[22px] md:text-[30px] font-extrabold text-white leading-snug">{b.name}</h1>
-          <p className="text-white/70 text-[13.5px] md:text-[14.5px] mt-3">
-            Total {total} Anggota Terdaftar
-          </p>
-        </div>
-      </div>
+      <PageHeader title={b.name} desc={"Total " + total + " Anggota Terdaftar"} breadcrumbs={[{label:"Tentang Kami",href:"/profil"},{label:"Bidang & Komisi",href:"/profil/komisi"}]} />
 
-      <div className="border-b border-line">
-        <div className="max-w-5xl mx-auto px-5 md:px-16 py-3 text-[12.5px] text-ink-soft flex items-center gap-1.5">
-          <Link href="/profil" className="hover:text-green-dk2">Tentang Kami</Link>
-          <span>&rsaquo;</span>
-          <Link href="/profil/komisi" className="hover:text-green-dk2">Bidang & Komisi</Link>
-          <span>&rsaquo;</span>
-          <span className="text-green-dk2 font-bold">{b.name}</span>
-        </div>
-      </div>
-
-      <div className="max-w-5xl mx-auto px-5 md:px-16 py-10 md:py-14">
+      <div className="site-container py-10 md:py-14">
         <Link href="/profil/komisi" className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-green-dk hover:text-emerald mb-6">
           &larr; Kembali ke Daftar Bidang & Komisi
         </Link>

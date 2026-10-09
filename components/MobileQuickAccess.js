@@ -8,10 +8,10 @@ export default function MobileQuickAccess({ icons }) {
     <section className="md:hidden bg-white px-5 pt-7 pb-6 grid grid-cols-4 gap-y-6">
       {icons.map((item) => (
         <Link key={item.id} href={item.linkUrl} className="flex flex-col items-center gap-2 text-center">
-          <div className="w-16 h-16 relative">
-            <Image src={item.iconUrl} alt="" fill className="object-contain" sizes="64px" />
+          <div className="w-11 h-11 relative rounded-xl bg-cream border border-line p-2">
+            <Image src={item.iconUrl} alt="" fill className="object-contain p-1.5" sizes="64px" />
           </div>
-          <span className="text-[10.5px] font-medium text-ink leading-tight">{item.label}</span>
+          <span className="text-[12px] font-semibold text-ink leading-tight">{item.label}</span>
         </Link>
       ))}
     </section>

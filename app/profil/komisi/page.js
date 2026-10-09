@@ -1,3 +1,4 @@
+import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
@@ -14,27 +15,9 @@ export default async function KomisiPage() {
 
   return (
     <div>
-      <div className="bg-green-dk2 px-5 py-10 md:px-16 md:py-14 text-center">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-[24px] md:text-[32px] font-extrabold text-white uppercase tracking-wide">
-            Bidang & Komisi
-          </h1>
-          <p className="text-white/70 text-[13.5px] md:text-[14.5px] leading-relaxed mt-3">
-            Mengenal lebih dekat struktur, tugas, dan susunan kepengurusan setiap bidang yang mengabdi di
-            Majelis Ulama Indonesia Kota Administrasi Jakarta Timur.
-          </p>
-        </div>
-      </div>
+      <PageHeader title="Bidang & Komisi" desc="Mengenal lebih dekat struktur, tugas, dan susunan kepengurusan setiap bidang yang mengabdi di Majelis Ulama Indonesia Kota Administrasi Jakarta Timur." />
 
-      <div className="border-b border-line">
-        <div className="max-w-7xl mx-auto px-5 md:px-16 py-3 text-[12.5px] text-ink-soft flex items-center gap-1.5">
-          <Link href="/profil" className="hover:text-green-dk2">Tentang Kami</Link>
-          <span>&rsaquo;</span>
-          <span className="text-green-dk2 font-bold">Bidang & Komisi</span>
-        </div>
-      </div>
-
-      <div className="max-w-5xl mx-auto px-5 md:px-16 py-10 md:py-14">
+      <div className="site-container py-10 md:py-14">
         <div className="text-[12px] font-bold uppercase tracking-wide text-emerald mb-4">
           Daftar Bidang / Komisi
         </div>

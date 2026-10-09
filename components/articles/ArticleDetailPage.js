@@ -1,3 +1,4 @@
+import PageHeader from "@/components/PageHeader";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
@@ -7,16 +8,9 @@ export default async function ArticleDetailPage({ section, slug, backHref, backL
 
   return (
     <div>
-      <div className="bg-gradient-to-br from-green-dk2 to-green-dk px-5 py-10 md:px-16 md:py-12">
-        <div className="max-w-3xl mx-auto">
-          <a href={backHref} className="text-[12.5px] text-lime font-bold mb-2 inline-block hover:underline">
-            &larr; {backLabel}
-          </a>
-          <h1 className="text-[22px] md:text-[30px] font-extrabold text-white leading-snug">{item.title}</h1>
-        </div>
-      </div>
+      <PageHeader title={item.title} variant="article" breadcrumbs={[{label:backLabel,href:backHref}]} />
 
-      <div className="max-w-3xl mx-auto px-5 md:px-8 py-8 md:py-12">
+      <div className="reading-container py-8 md:py-12">
         {item.extra && item.extra.arabic && (
           <p dir="rtl" className="text-[26px] leading-loose text-right text-green-dk2 font-arabic mb-4">
             {item.extra.arabic}

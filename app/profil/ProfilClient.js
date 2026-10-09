@@ -1,4 +1,5 @@
 "use client";
+import PageHeader from "@/components/PageHeader";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -196,29 +197,9 @@ export default function ProfilClient({ initialTab, pimpinanInti, dewanPertimbang
 
   return (
     <div>
-      <div className="bg-green-dk2 px-5 py-10 md:px-16 md:py-14 text-center">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-[24px] md:text-[32px] font-extrabold text-white uppercase tracking-wide">
-            Profil Kelembagaan
-          </h1>
-          <p className="text-white/70 text-[13.5px] md:text-[14.5px] leading-relaxed mt-3">
-            Mengenal lebih dekat sejarah, visi, misi, serta susunan kepengurusan Majelis Ulama Indonesia Kota
-            Administrasi Jakarta Timur sebagai pelayan umat dan mitra pemerintah.
-          </p>
-        </div>
-      </div>
+      <PageHeader title="Profil Kelembagaan" desc="Mengenal lebih dekat sejarah, visi, misi, serta susunan kepengurusan Majelis Ulama Indonesia Kota Administrasi Jakarta Timur sebagai pelayan umat dan mitra pemerintah." />
 
-      <div className="border-b border-line">
-        <div className="max-w-7xl mx-auto px-5 md:px-16 py-3 text-[12.5px] text-ink-soft flex items-center gap-1.5">
-          <span>Beranda</span>
-          <span>&rsaquo;</span>
-          <span>Tentang Kami</span>
-          <span>&rsaquo;</span>
-          <span className="text-green-dk2 font-bold">{tabLabel}</span>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-5 md:px-16 py-10 md:py-14 grid md:grid-cols-[240px_1fr] gap-8">
+      <div className="site-container py-10 md:py-14 grid md:grid-cols-[240px_1fr] gap-8">
         <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible">
           {TABS.map((t) => (
             <button

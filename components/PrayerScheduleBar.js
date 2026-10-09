@@ -90,7 +90,7 @@ export default function PrayerScheduleBar() {
           </p>
           {locStatus === "error" && (
             <p className="text-[11.5px] text-amber-200 mt-1.5 leading-relaxed">
-              {GEO_ERROR_MESSAGES[errorReason] ?? "Gagal mendapatkan lokasi."} Menampilkan jadwal {DEFAULT_LOC.label}.{" "}
+              Lokasi belum tersedia. Menggunakan Jakarta Timur. {" "}
               <button onClick={requestLocation} className="underline font-bold hover:text-white">
                 Coba lagi
               </button>

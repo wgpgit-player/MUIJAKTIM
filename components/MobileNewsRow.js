@@ -1,3 +1,4 @@
+import NewsImage from "./NewsImage";
 import Link from "next/link";
 
 // List rapat ala NU Online: badge kategori + judul di kiri, thumbnail kecil di kanan,
@@ -9,14 +10,9 @@ export default function MobileNewsRow({ item }) {
         <span className="inline-block text-[10px] font-semibold text-emerald bg-emerald/10 px-2 py-0.5 rounded mb-1.5">
           {item.category}
         </span>
-        <div className="text-[13px] font-semibold leading-snug text-ink line-clamp-2">{item.title}</div>
+        <div className="text-[15px] font-semibold leading-snug text-ink line-clamp-2">{item.title}</div>
       </div>
-      {item.imageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={item.imageUrl} alt="" className="w-16 h-16 shrink-0 rounded-lg object-cover" />
-      ) : (
-        <div className={`w-16 h-16 shrink-0 rounded-lg bg-gradient-to-br ${item.gradient}`} />
-      )}
+      <div className="news-thumb"><NewsImage src={item.imageUrl} category={item.category} compact /></div>
     </Link>
   );
 }

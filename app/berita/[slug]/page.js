@@ -1,3 +1,5 @@
+import NewsImage from "@/components/NewsImage";
+import PageHeader from "@/components/PageHeader";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatDateID } from "@/lib/date";
@@ -19,34 +21,20 @@ export default async function NewsDetailPage({ params }) {
 
   const isHtmlBody = /<[a-z][\s\S]*>/i.test(news.body);
 
+  const plainBody=news.body.replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim();
+  const excerpt=(news.excerpt||'').replace(/\s+/g,' ').trim();
+  const repeated=!!excerpt && plainBody.startsWith(excerpt);
   return (
     <div>
-      {news.imageUrl && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={news.imageUrl}
-          alt={news.title}
-          className="w-full h-[220px] md:h-[340px] object-cover"
-        />
-      )}
-      <div className="bg-gradient-to-br from-green-dk2 to-green-dk px-5 py-10 md:px-16 md:py-12">
-        <div className="max-w-3xl mx-auto">
-          <span className="text-[11.5px] font-bold px-3 py-1.5 rounded-full bg-lime text-green-dk2 w-fit inline-block mb-4">
-            {news.category}
-          </span>
-          <h1 className="text-[24px] md:text-[32px] font-extrabold text-white leading-snug">{news.title}</h1>
-          <div className="text-white/70 text-[13px] font-semibold mt-3">
-            {formatDateID(news.publishedAt ?? news.createdAt)}
-          </div>
-        </div>
-      </div>
+      <PageHeader title={news.title} variant="article" breadcrumbs={[{label:"Berita & Opini",href:"/berita"}]}><span>{news.category} · MUI Jakarta Timur</span><span>{formatDateID(news.publishedAt ?? news.createdAt)}</span></PageHeader>
 
-      <div className="max-w-3xl mx-auto px-5 md:px-8 py-8 md:py-12">
-        <p className="text-[14.5px] text-ink-soft leading-relaxed mb-6">{news.excerpt}</p>
+      <div className="reading-container py-8 md:py-12">
+        {news.imageUrl && <div className="article-image"><NewsImage src={news.imageUrl} alt={news.title}/></div>}
+        {!repeated && excerpt && <p className="article-intro">{news.excerpt}</p>}
         {isHtmlBody ? (
-          <div className="prose-news text-[14.5px] text-ink leading-relaxed" dangerouslySetInnerHTML={{ __html: news.body }} />
+          <div className="prose-news text-[16px] text-ink leading-relaxed" dangerouslySetInnerHTML={{ __html: news.body }} />
         ) : (
-          <div className="text-[14.5px] text-ink leading-relaxed whitespace-pre-wrap">{news.body}</div>
+          <div className="text-[16px] text-ink leading-relaxed whitespace-pre-wrap">{news.body}</div>
         )}
 
         <CommentSection contentType="news" contentId={news.id} path={`/berita/${news.slug}`} />

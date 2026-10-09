@@ -1,4 +1,5 @@
 "use client";
+import PageHeader from "@/components/PageHeader";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -29,6 +30,7 @@ function formatCountdown(ms) {
 export default function JadwalShalatClient() {
   const { loc, status: locStatus, errorReason, request: useMyLocation } = useGeolocation(DEFAULT_LOC);
   const [timings, setTimings] = useState(null);
+  const [retry, setRetry] = useState(0);
   const [hijriDate, setHijriDate] = useState(null);
   const [status, setStatus] = useState("loading"); // loading | done | error
   const [now, setNow] = useState(new Date());
@@ -75,7 +77,7 @@ export default function JadwalShalatClient() {
     return () => {
       cancelled = true;
     };
-  }, [loc]);
+  }, [loc, retry]);
 
   // Minta lokasi otomatis saat halaman dibuka, supaya jadwal & kiblat langsung akurat
   // tanpa perlu klik manual. Kalau ditolak/gagal, tetap fallback ke DEFAULT_LOC.
@@ -103,21 +105,9 @@ export default function JadwalShalatClient() {
 
   return (
     <div>
-      <div className="bg-gradient-to-br from-green-dk2 to-green-dk px-5 py-10 md:px-16 md:py-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-[11px] md:text-[12.5px] text-lime font-bold mb-2 flex items-center gap-1.5 flex-wrap">
-            <Link href="/layanan" className="hover:underline">Layanan Umat</Link>
-            <span>&rsaquo;</span>
-            <span>Jadwal Shalat &amp; Kiblat</span>
-          </div>
-          <h1 className="text-[26px] md:text-[36px] font-extrabold text-white">Jadwal Shalat &amp; Kiblat</h1>
-          <p className="text-white/70 text-[13px] md:text-[14px] mt-2 max-w-xl">
-            Waktu shalat dihitung real-time berdasarkan lokasi, lengkap dengan arah kiblat.
-          </p>
-        </div>
-      </div>
+      <PageHeader variant="service" title="Jadwal Shalat & Kiblat" desc="Waktu shalat berdasarkan lokasi, lengkap dengan arah kiblat." />
 
-      <div className="max-w-5xl mx-auto px-5 md:px-8 py-8 md:py-12 grid md:grid-cols-[1.4fr_1fr] gap-8">
+      <div className="site-container py-8 md:py-12 grid md:grid-cols-[1.4fr_1fr] gap-8">
         {/* Prayer times */}
         <div>
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
@@ -133,6 +123,7 @@ export default function JadwalShalatClient() {
             </div>
             <button
               onClick={useMyLocation}
+              disabled={locStatus === "loading"}
               className="shrink-0 rounded-full border border-green-dk text-green-dk text-[12px] font-bold px-4 py-2 hover:bg-green-dk hover:text-white transition-colors"
             >
               {locStatus === "loading" ? "Mencari lokasi…" : "Gunakan Lokasi Saya"}
@@ -141,20 +132,20 @@ export default function JadwalShalatClient() {
 
           {locStatus === "error" && (
             <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-4 text-[12.5px] text-amber-800 leading-relaxed">
-              {GEO_ERROR_MESSAGES[errorReason] ?? "Gagal mendapatkan lokasi."} Menampilkan jadwal untuk{" "}
-              <strong>{DEFAULT_LOC.label}</strong>.
+              Lokasi belum tersedia. Jadwal menggunakan Jakarta Timur.
             </div>
           )}
 
           {status === "loading" && (
             <div className="bg-white rounded-2xl border border-line p-8 text-center text-ink-soft text-[13px]">
-              Memuat jadwal shalat…
+              Memuat jadwal shalat untuk {loc.label}…
             </div>
           )}
 
           {status === "error" && (
             <div className="bg-white rounded-2xl border border-line p-8 text-center text-ink-soft text-[13px]">
-              Gagal memuat data waktu shalat. Coba muat ulang halaman.
+              Jadwal shalat belum dapat dimuat.
+              <button onClick={()=>setRetry(n=>n+1)} className="block mx-auto mt-3 underline font-semibold">Coba lagi</button>
             </div>
           )}
 

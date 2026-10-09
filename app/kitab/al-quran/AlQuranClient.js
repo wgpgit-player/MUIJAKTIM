@@ -1,4 +1,5 @@
 "use client";
+import PageHeader from "@/components/PageHeader";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -75,21 +76,9 @@ export default function AlQuranClient() {
 
   return (
     <div>
-      <div className="bg-gradient-to-br from-green-dk2 to-green-dk px-5 py-10 md:px-16 md:py-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-[12.5px] text-lime font-bold mb-2 flex items-center gap-1.5">
-            <Link href="/kitab" className="hover:underline">Kitab</Link>
-            <span>&rsaquo;</span>
-            <span>Al-Qur&apos;an Digital</span>
-          </div>
-          <h1 className="text-[26px] md:text-[36px] font-extrabold text-white">Al-Qur&apos;an Digital</h1>
-          <p className="text-white/70 text-[13px] md:text-[14px] mt-2 max-w-xl">
-            114 surat lengkap dengan teks Arab, latin, dan terjemahan Bahasa Indonesia.
-          </p>
-        </div>
-      </div>
+      <PageHeader variant="service" title="Al-Qur’an Digital" desc="114 surat lengkap dengan teks Arab, latin, dan terjemahan Bahasa Indonesia." />
 
-      <div className="max-w-7xl mx-auto px-5 md:px-8 py-6 md:py-8">
+      <div className="site-container py-6 md:py-8">
         <div className="grid md:grid-cols-[300px_1fr] gap-5 md:gap-6 items-start">
           {/* Kiri: daftar surat, kecil & bisa discroll. Di mobile: layar penuh, disembunyikan
               begitu 1 surat dipilih (lihat mobileView). */}

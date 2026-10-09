@@ -19,13 +19,14 @@ export default function SiteChrome({ children }) {
   }
 
   return (
-    <>
+    <div className="public-site">
+      <a href="#main-content" className="skip-link">Langsung ke konten</a>
       <AdminBar />
       <Navbar />
-      <main className="pb-20 md:pb-0">{children}</main>
+      <main id="main-content" tabIndex={-1}>{children}</main>
       <BottomNav />
       <Footer />
       <ChatWidget />
-    </>
+    </div>
   );
 }

@@ -74,28 +74,11 @@ export default function MobileHero({ heroImageUrl }) {
     <section className="md:hidden relative overflow-hidden rounded-b-2xl pt-6 pb-10 px-5">
       <div className="absolute inset-0">
         <Image src={heroImageUrl || "/hero/slide-1.jpg"} alt="" fill priority className="object-cover" sizes="100vw" />
-        <div className="absolute inset-0 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-green-dk2/70" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/70" />
       </div>
 
-      {/* baris atas: logo + notifikasi */}
-      <div className="relative z-10 flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-white/15 backdrop-blur-sm flex items-center justify-center">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8">
-              <path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6z" />
-            </svg>
-          </div>
-          <span className="text-white font-bold text-[14px]">MUI JAKTIM</span>
-        </div>
-        <button aria-label="Notifikasi" className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8">
-            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.7 21a2 2 0 0 1-3.4 0" />
-          </svg>
-        </button>
-      </div>
-
+      <h1 className="relative z-10 text-white font-bold text-[24px] leading-tight mb-6">Rumah Fatwa &amp; Dakwah Jakarta Timur</h1>
       {/* lokasi */}
       <div className="relative z-10 flex items-center justify-center gap-1.5 mb-5">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
@@ -109,7 +92,7 @@ export default function MobileHero({ heroImageUrl }) {
       </div>
       {locStatus === "error" && (
         <p className="relative z-10 text-center text-[11px] text-amber-200 mb-4 px-4 leading-relaxed">
-          {GEO_ERROR_MESSAGES[errorReason] ?? "Gagal mendapatkan lokasi."}
+          Lokasi belum tersedia. Menggunakan Jakarta Timur.
         </p>
       )}
 

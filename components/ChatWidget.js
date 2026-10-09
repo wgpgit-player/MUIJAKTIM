@@ -1,11 +1,12 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const FALLBACK_WA = { number: "6281233881973", message: "Assalamu'alaikum, saya ingin bertanya tentang..." };
 const WELCOME = {
   role: "bot",
-  text: "Assalamu'alaikum! Tanya apa saja seputar konten yang tersedia. Kalau saya tidak menemukan jawabannya, Anda bisa lanjut chat admin.",
+  text: "Assalamu'alaikum! Tanya apa saja seputar konten yang tersedia. Kalau saya tidak menemukan jawabannya, Anda bisa lanjut hubungi sekretariat.",
 };
 
 function WhatsAppIcon({ size = 18 }) {
@@ -73,9 +74,9 @@ function AiTab({ waHref }) {
                   href={waHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#25D366] text-white text-[11.5px] font-bold px-3 py-1.5"
+                  className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-green-dk2 text-white text-[11.5px] font-bold px-3 py-1.5"
                 >
-                  <WhatsAppIcon size={12} /> Chat Admin
+                  <WhatsAppIcon size={12} /> Hubungi Sekretariat
                 </a>
               )}
             </div>
@@ -88,8 +89,8 @@ function AiTab({ waHref }) {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Tulis pertanyaan…"
-          className="flex-1 rounded-full border border-line px-3.5 py-2 text-[12.5px] outline-none focus:border-green-dk transition-colors"
+          aria-label="Pertanyaan bantuan situs" placeholder="Tulis pertanyaan…"
+          className="min-w-0 flex-1 rounded-full border border-line px-3.5 py-2 text-[12.5px] outline-none focus:border-green-dk transition-colors"
         />
         <button
           type="submit"
@@ -108,6 +109,8 @@ export default function ChatWidget() {
   const [tab, setTab] = useState("menu"); // menu | ai
   const [wa, setWa] = useState(FALLBACK_WA);
   const panelRef = useRef(null);
+  const launcherRef = useRef(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     fetch("/api/settings/whatsapp-contact", { signal: AbortSignal.timeout(5000) })
@@ -124,19 +127,22 @@ export default function ChatWidget() {
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, [open]);
 
+  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => { if(!open)return; panelRef.current?.querySelector('button')?.focus(); const onKey=e=>{if(e.key==='Escape'){setOpen(false);launcherRef.current?.focus();}}; document.addEventListener('keydown',onKey); return()=>document.removeEventListener('keydown',onKey); }, [open]);
+  if(pathname?.startsWith('/layanan/tanya-ulama') || pathname?.startsWith('/layanan/jadwal-shalat')) return null;
   const waHref = `https://wa.me/${wa.number}?text=${encodeURIComponent(wa.message)}`;
 
   return (
-    <div className="fixed bottom-20 md:bottom-6 right-5 z-[70] flex flex-col items-end gap-3" ref={panelRef}>
+    <div className="help-dock flex flex-col items-end gap-3" ref={panelRef}>
       {open && (
-        <div className="w-80 max-w-[88vw] bg-white/90 backdrop-blur-2xl border border-white/60 rounded-3xl shadow-[0_16px_48px_-12px_rgba(11,77,51,0.35)] overflow-hidden">
+        <div role="dialog" aria-label="Bantuan situs" className="help-panel w-80 bg-white border border-line rounded-xl shadow-card overflow-hidden">
           <div className="bg-green-dk2/90 backdrop-blur-xl px-4 py-3.5 flex items-center justify-between">
             <div className="flex items-center gap-2">
               {tab === "ai" && (
                 <button
                   onClick={() => setTab("menu")}
                   aria-label="Kembali"
-                  className="w-6 h-6 rounded-full flex items-center justify-center text-white/80 hover:bg-white/10"
+                  className="w-11 h-11 rounded-full flex items-center justify-center text-white/80 hover:bg-white/10"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
                     <path d="m15 6-6 6 6 6" />
@@ -145,15 +151,15 @@ export default function ChatWidget() {
               )}
               <div>
                 <div className="text-white font-extrabold text-[13.5px]">
-                  {tab === "ai" ? "Tanya AI" : "Chat with Us"}
+                  {tab === "ai" ? "Tanya AI" : "Bantuan situs"}
                 </div>
                 <div className="text-white/60 text-[11px]">MUI Jakarta Timur</div>
               </div>
             </div>
             <button
-              onClick={() => setOpen(false)}
+              onClick={() => {setOpen(false); launcherRef.current?.focus();}}
               aria-label="Tutup"
-              className="w-7 h-7 rounded-full flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+              className="w-11 h-11 rounded-full flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-white transition-colors"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
                 <path d="M18 6 6 18M6 6l12 12" />
@@ -206,11 +212,13 @@ export default function ChatWidget() {
           setOpen((v) => !v);
           setTab("menu");
         }}
-        aria-label="Buka Chat with Us"
-        className="w-14 h-14 rounded-full bg-[#25D366] text-white shadow-[0_8px_24px_-6px_rgba(37,211,102,0.6)] flex items-center justify-center hover:scale-105 transition-transform relative"
+        ref={launcherRef}
+        aria-label={open ? "Tutup bantuan situs" : "Buka bantuan situs"}
+        aria-expanded={open}
+        className="help-launcher rounded-full bg-green-dk2 text-white flex items-center justify-center gap-2"
       >
-        {!open && <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-lime border-2 border-white" />}
-        <WhatsAppIcon size={28} />
+        
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9"/><path d="M9 8a3 3 0 0 1 6 1c0 2-3 2-3 4M12 16v1"/></svg><span>Bantuan</span>
       </button>
     </div>
   );

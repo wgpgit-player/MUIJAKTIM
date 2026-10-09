@@ -24,7 +24,7 @@ export default function ExternalNewsFeed() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/news-feed")
+    fetch("/api/news-feed", { signal: AbortSignal.timeout(10000) })
       .then((r) => r.json())
       .then((data) => {
         if (cancelled) return;
@@ -42,7 +42,7 @@ export default function ExternalNewsFeed() {
     <div className="bg-white border border-line rounded-2xl p-6 md:p-7">
       <div className="flex items-center justify-between mb-1">
         <div>
-          <div className="font-extrabold text-[15.5px] text-green-dk2">Kabar dari Sumber Lain</div>
+          <div className="font-extrabold text-[15.5px] text-green-dk2">Berita Sumber Eksternal</div>
           <p className="text-[12px] text-ink-soft mt-1">
             Kurasi otomatis dari NU Online &amp; Republika, memperbarui sendiri secara berkala.
           </p>
@@ -53,7 +53,7 @@ export default function ExternalNewsFeed() {
         </span>
       </div>
 
-      <div className="mt-5 flex flex-col divide-y divide-line">
+      <div className="mt-5 flex flex-col divide-y divide-line" aria-busy={state.loading}>
         {state.loading &&
           Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="py-4 animate-pulse">

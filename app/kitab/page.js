@@ -30,7 +30,7 @@ export default function KitabPage() {
         desc="Fasilitas literatur dan referensi digital bagi umat, dari Al-Qur'an, rujukan kitab, hingga kamus istilah."
       />
 
-      <div className="max-w-7xl mx-auto px-5 md:px-16 py-10 md:py-14">
+      <div className="site-container py-10 md:py-14">
         <TopicList items={items} />
       </div>
     </div>

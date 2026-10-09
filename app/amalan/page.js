@@ -40,7 +40,7 @@ export default function AmalanPage() {
         desc="Fiqih wanita, parenting islami, doa, dzikir, naskah khutbah, dan hikmah untuk menguatkan amalan harian umat."
       />
 
-      <div className="max-w-7xl mx-auto px-5 md:px-16 py-10 md:py-14">
+      <div className="site-container py-10 md:py-14">
         <TopicList items={items} />
       </div>
     </div>

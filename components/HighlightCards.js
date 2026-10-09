@@ -10,8 +10,8 @@ export default function HighlightCards({ icons }) {
           href={c.linkUrl}
           className="flex items-center gap-3 px-4 py-6 md:px-5 md:py-8 group hover:bg-cream transition-colors"
         >
-          <div className="w-12 h-12 md:w-14 md:h-14 relative shrink-0">
-            <Image src={c.iconUrl} alt="" fill className="object-contain" sizes="56px" />
+          <div className="w-11 h-11 relative shrink-0 rounded-xl bg-cream border border-line">
+            <Image src={c.iconUrl} alt="" fill className="object-contain p-1.5" sizes="56px" />
           </div>
           <div className="min-w-0">
             <div className="font-extrabold text-[13.5px] md:text-[14.5px] text-ink leading-tight">{c.label}</div>

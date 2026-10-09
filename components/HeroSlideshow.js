@@ -29,6 +29,7 @@ export default function HeroSlideshow({ slides }) {
   }, []);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = setInterval(next, INTERVAL_MS);
     return () => clearInterval(id);
   }, [active, next]);
@@ -64,7 +65,7 @@ export default function HeroSlideshow({ slides }) {
       })}
 
       {/* soft blur + gradient for legibility, Mercury-style dreamy look */}
-      <div className="absolute inset-0 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 bg-green-dk2/70" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/35 to-black/60" />
       <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-black/60 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/70 to-transparent" />
@@ -96,7 +97,7 @@ export default function HeroSlideshow({ slides }) {
             key={i}
             aria-label={`Slide ${i + 1}`}
             onClick={() => setActive(i)}
-            className={`h-1.5 rounded-full transition-all ${
+            className={`min-w-[44px] min-h-[44px] border-8 border-transparent bg-clip-padding rounded-full transition-all ${
               i === active ? "w-6 bg-lime" : "w-1.5 bg-white/50"
             }`}
           />

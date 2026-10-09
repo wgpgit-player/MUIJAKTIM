@@ -1,3 +1,4 @@
+import PageHeader from "@/components/PageHeader";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getAuthedProfile } from "@/lib/rbac";
@@ -13,8 +14,7 @@ export default async function AkunPage() {
   const profile = await prisma.profile.findUnique({ where: { id: authed.id } });
 
   return (
-    <div className="max-w-lg mx-auto px-5 py-12">
-      <h1 className="text-[22px] font-extrabold text-green-dk2 mb-1">Akun Saya</h1>
+    <div><PageHeader title="Akun Saya" variant="service" /><div className="max-w-lg mx-auto px-5 py-12">
       <p className="text-[13px] text-ink-soft mb-8">
         {profile?.firstName} {profile?.lastName} · @{profile?.username} ·{" "}
         <span className="font-bold text-green-dk">{profile?.role}</span>
@@ -33,6 +33,6 @@ export default async function AkunPage() {
           Keluar dari akun
         </button>
       </form>
-    </div>
+    </div></div>
   );
 }

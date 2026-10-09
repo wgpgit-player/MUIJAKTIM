@@ -26,7 +26,7 @@ const TABS = [
   {
     href: "/layanan/tanya-ulama",
     label: "Tanya",
-    isFab: true,
+    icon: (active) => <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={active ? "#0B4D33" : "#5B6D64"} strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>,
   },
   {
     href: "/berita",
@@ -53,33 +53,5 @@ const TABS = [
 export default function BottomNav() {
   const pathname = usePathname();
 
-  return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-line px-2 pt-2.5 pb-3.5 shadow-nav">
-      <div className="flex justify-around items-end">
-        {TABS.map((tab) => {
-          const active = pathname === tab.href;
-          if (tab.isFab) {
-            return (
-              <Link key={tab.href} href={tab.href} className="flex flex-col items-center -mt-6">
-                <div className="w-13 h-13 w-[52px] h-[52px] rounded-full bg-lime flex items-center justify-center shadow-[0_6px_16px_rgba(200,240,73,0.5)] border-4 border-cream">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#083C28" strokeWidth="2.4">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  </svg>
-                </div>
-                <span className="text-[9.5px] font-extrabold text-green-dk2 mt-0.5">{tab.label}</span>
-              </Link>
-            );
-          }
-          return (
-            <Link key={tab.href} href={tab.href} className="flex flex-col items-center gap-1">
-              {tab.icon(active)}
-              <span className={`text-[10px] font-bold ${active ? "text-green-dk" : "text-ink-soft"}`}>
-                {tab.label}
-              </span>
-            </Link>
-          );
-        })}
-      </div>
-    </nav>
-  );
+  return <nav aria-label="Navigasi ponsel" className="bottom-nav">{TABS.map(tab=>{const active=pathname===tab.href||(tab.href!=="/"&&pathname?.startsWith(tab.href+"/"));return <Link key={tab.href} href={tab.href} aria-current={active?"page":undefined} className={active?"is-active":""}>{tab.icon(active)}<span>{tab.label}</span></Link>;})}</nav>;
 }

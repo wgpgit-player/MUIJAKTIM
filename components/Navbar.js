@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TopUtilityBar from "./TopUtilityBar";
 import { createClient } from "@/lib/supabase/client";
 
@@ -68,143 +68,26 @@ const MENU = [
   },
 ];
 
-function ChevronDown({ className }) {
-  return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className={className}>
-      <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
+function NavDropdown({item,pathname}) {
+ const [open,setOpen]=useState(false);
+ const active=pathname===item.href||pathname.startsWith(item.href+"/");
+ return <div className="nav-dropdown" onMouseEnter={()=>setOpen(true)} onMouseLeave={()=>setOpen(false)} onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget))setOpen(false);}} onKeyDown={e=>{if(e.key==="Escape"){setOpen(false);e.currentTarget.querySelector("button").focus();}}}>
+ <div className="nav-dropdown__trigger"><Link href={item.href} aria-current={active?"page":undefined}>{item.label}</Link><button type="button" aria-label={"Buka menu "+item.label} aria-expanded={open} onClick={()=>setOpen(!open)}>⌄</button></div>
+ {open&&<div className="nav-dropdown__panel">{item.sub.map(c=><Link key={c.href} href={c.href} onClick={()=>setOpen(false)}>{c.label}</Link>)}</div>}</div>;
 }
-
-function NavDropdown({ item, tone }) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-      <Link
-        href={item.href}
-        className={`flex items-center gap-0.5 transition-colors hover:text-emerald ${tone}`}
-      >
-        {item.label}
-        <ChevronDown className={`shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
-      </Link>
-
-      {open && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50">
-          <div className="w-72 bg-white rounded-xl border border-line shadow-[0_16px_40px_-8px_rgba(11,77,51,0.25)] p-1.5">
-            {item.sub.map((s) => (
-              <Link
-                key={s.href}
-                href={s.href}
-                className="block rounded-lg px-3.5 py-2.5 text-[13px] font-semibold text-ink leading-snug whitespace-normal hover:bg-cream hover:text-green-dk2 transition-colors"
-              >
-                {s.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default function Navbar() {
-  const pathname = usePathname();
-  const isHome = pathname === "/";
-  const [scrolled, setScrolled] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    if (!isHome) return;
-    const onScroll = () => setScrolled(window.scrollY > 420);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [isHome]);
-
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getSession().then(({ data }) => setIsLoggedIn(!!data.session));
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => setIsLoggedIn(!!session));
-    return () => listener.subscription.unsubscribe();
-  }, []);
-
-  const accountHref = isLoggedIn ? "/profil/akun" : "/login";
-  const accountLabel = isLoggedIn ? "Akun Saya" : "Login";
-
-  // Homepage: transparent over the hero, becomes a fixed glass bar once scrolled past it.
-  if (isHome) {
-    return (
-      <header className="hidden md:block fixed top-0 inset-x-0 z-30">
-        <TopUtilityBar />
-        <div
-          className={`px-8 transition-all duration-300 ${
-            scrolled ? "py-3 bg-white/70 backdrop-blur-xl border-b border-white/60 shadow-sm" : "py-6 bg-transparent"
-          }`}
-        >
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <Image src="/logo.png" alt="Logo MUI Jakarta Timur" width={26} height={26} className="object-contain" />
-            <div className="leading-none">
-              <div className={`font-extrabold text-[11.5px] tracking-wide transition-colors ${scrolled ? "text-green-dk2" : "text-white"}`}>
-                Majelis Ulama Indonesia
-              </div>
-              <div className={`text-[9px] font-semibold mt-0.5 transition-colors ${scrolled ? "text-ink-soft" : "text-white/75"}`}>
-                Kota Adm. Jakarta Timur
-              </div>
-            </div>
-          </Link>
-
-          <nav className="flex items-center gap-4 text-[12px] font-semibold whitespace-nowrap">
-            {MENU.map((item) => (
-              <NavDropdown key={item.href} item={item} tone={scrolled ? "text-ink" : "text-white/85 hover:text-lime"} />
-            ))}
-          </nav>
-
-          <Link
-            href={accountHref}
-            className={`shrink-0 rounded-full px-4 py-1.5 text-[12px] font-bold transition-colors ${
-              scrolled
-                ? "bg-green-dk2 text-white hover:bg-green-dk"
-                : "bg-white text-green-dk2 hover:bg-lime"
-            }`}
-          >
-            {accountLabel}
-          </Link>
-        </div>
-        </div>
-      </header>
-    );
-  }
-
-  // All other pages: utility bar scrolls away, main nav stays sticky.
-  return (
-    <div>
-      <TopUtilityBar />
-      <header className="sticky top-0 z-40 hidden md:block bg-white border-b border-line">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 px-6 py-2.5">
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <Image src="/logo.png" alt="Logo MUI Jakarta Timur" width={34} height={34} className="object-contain" />
-          <div className="leading-none">
-            <div className="font-extrabold text-[13px] text-green-dk2">Majelis Ulama Indonesia</div>
-            <div className="text-[9.5px] text-ink-soft font-semibold mt-0.5">Kota Adm. Jakarta Timur</div>
-          </div>
-        </Link>
-
-        <nav className="flex items-center gap-4 text-[12.5px] font-semibold whitespace-nowrap">
-          {MENU.map((item) => (
-            <NavDropdown key={item.href} item={item} tone="text-ink" />
-          ))}
-        </nav>
-
-        <Link
-          href={accountHref}
-          className="shrink-0 rounded-full border-[1.5px] border-green-dk text-green-dk px-4 py-1.5 text-[12.5px] font-bold hover:bg-green-dk hover:text-white transition-colors"
-        >
-          {accountLabel}
-        </Link>
-      </div>
-      </header>
-    </div>
-  );
+export default function Navbar(){
+ const pathname=usePathname()||"/";const [menuOpen,setMenuOpen]=useState(false);const [isLoggedIn,setIsLoggedIn]=useState(false);const menuRef=useRef(null);const toggleRef=useRef(null);
+ useEffect(()=>{setMenuOpen(false);},[pathname]);
+ useEffect(()=>{const supabase=createClient();supabase.auth.getSession().then(({data})=>setIsLoggedIn(!!data.session));const {data}=supabase.auth.onAuthStateChange((_event,session)=>setIsLoggedIn(!!session));return()=>data.subscription.unsubscribe();},[]);
+ useEffect(()=>{if(!menuOpen)return;const old=document.body.style.overflow;document.body.style.overflow="hidden";menuRef.current?.querySelector("a")?.focus();return()=>{document.body.style.overflow=old;};},[menuOpen]);
+ function closeMenu(){setMenuOpen(false);toggleRef.current?.focus();}
+ function trap(e){if(e.key==="Escape"){closeMenu();return;}if(e.key!=="Tab")return;const els=[toggleRef.current,...menuRef.current.querySelectorAll('a,button,summary')].filter(x=>x&&x.getClientRects().length);const first=els[0],last=els[els.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
+ return <header className="site-navbar" onKeyDown={menuOpen?trap:undefined}>
+ <div className="desktop-utility"><TopUtilityBar/></div>
+ <div className="site-container navbar-row"><Link href="/" className="site-brand"><Image src="/logo.png" alt="Logo resmi MUI" width={40} height={40}/><span><strong>MUI Jakarta Timur</strong><small>Majelis Ulama Indonesia</small></span></Link>
+ <nav aria-label="Navigasi utama" className="desktop-menu">{MENU.map(item=><NavDropdown key={item.href} item={item} pathname={pathname}/>)}</nav>
+ <Link className="account-link" href={isLoggedIn?"/profil/akun":"/login"}>{isLoggedIn?"Akun Saya":"Login"}</Link>
+ <button ref={toggleRef} className="mobile-menu-toggle" aria-label={menuOpen?"Tutup menu situs":"Buka menu situs"} aria-expanded={menuOpen} aria-controls="site-menu" onClick={()=>menuOpen?closeMenu():setMenuOpen(true)}>{menuOpen?"Tutup ✕":"Menu ☰"}</button></div>
+ {menuOpen&&<nav ref={menuRef} id="site-menu" aria-label="Seluruh bagian situs" className="mobile-site-menu"><Link href="/" onClick={closeMenu}>Beranda</Link>{MENU.map(item=><details key={item.href} open={pathname.startsWith(item.href)}><summary>{item.label}</summary><Link href={item.href} onClick={closeMenu}>Lihat {item.label}</Link>{item.sub.map(c=><Link key={c.href} href={c.href} onClick={closeMenu} aria-current={pathname===c.href?"page":undefined}>{c.label}</Link>)}</details>)}<Link href={isLoggedIn?"/profil/akun":"/login"} onClick={closeMenu}>{isLoggedIn?"Akun Saya":"Login"}</Link></nav>}
+ </header>;
 }

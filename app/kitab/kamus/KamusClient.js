@@ -1,4 +1,5 @@
 "use client";
+import PageHeader from "@/components/PageHeader";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -52,21 +53,9 @@ export default function KamusClient() {
 
   return (
     <div>
-      <div className="bg-gradient-to-br from-green-dk2 to-green-dk px-5 py-10 md:px-16 md:py-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-[12.5px] text-lime font-bold mb-2 flex items-center gap-1.5">
-            <Link href="/kitab" className="hover:underline">Kitab</Link>
-            <span>&rsaquo;</span>
-            <span>Kamus Arab-Indonesia</span>
-          </div>
-          <h1 className="text-[26px] md:text-[36px] font-extrabold text-white">Kamus Arab-Indonesia</h1>
-          <p className="text-white/70 text-[13px] md:text-[14px] mt-2 max-w-xl">
-            Terjemahan cepat Indonesia &harr; Arab untuk membantu memahami istilah keislaman.
-          </p>
-        </div>
-      </div>
+      <PageHeader layout="reading" variant="service" title="Kamus Arab-Indonesia" desc="Terjemahan cepat Indonesia ↔ Arab untuk membantu memahami istilah keislaman." />
 
-      <div className="max-w-3xl mx-auto px-5 md:px-8 py-8 md:py-12">
+      <div className="reading-container py-8 md:py-12">
         <div className="bg-white rounded-2xl border border-line overflow-hidden">
           {/* Selector bahasa */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-line">

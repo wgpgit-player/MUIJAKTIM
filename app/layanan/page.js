@@ -1,3 +1,4 @@
+import PageHeader from "@/components/PageHeader";
 import Link from "next/link";
 
 export const metadata = { title: "Layanan Umat — MUI Jakarta Timur" };
@@ -28,13 +29,8 @@ const layanan = [
 export default function LayananPage() {
   return (
     <div>
-      <div className="bg-gradient-to-br from-green-dk2 to-green-dk px-5 py-10 md:px-16 md:py-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-[12.5px] text-lime font-bold mb-2">Layanan Umat</div>
-          <h1 className="text-[26px] md:text-[36px] font-extrabold text-white">Fitur Interaktif untuk Jamaah</h1>
-        </div>
-      </div>
-      <div className="max-w-7xl mx-auto px-5 md:px-16 py-12 grid md:grid-cols-2 gap-5">
+      <PageHeader title="Fitur Interaktif untuk Jamaah" desc="Layanan keagamaan untuk membantu keseharian umat Jakarta Timur." />
+      <div className="site-container py-12 grid md:grid-cols-2 gap-5">
         {layanan.map((l) => (
           <Link key={l.href} href={l.href} className="bg-white border border-line rounded-2xl p-6 hover:border-emerald transition-colors">
             <div className="font-extrabold text-[15.5px] mb-2 text-green-dk2">{l.title}</div>
