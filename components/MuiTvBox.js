@@ -1,74 +1,8 @@
 "use client";
-
-import { useEffect, useState } from "react";
-
-export default function MuiTvBox() {
-  const [state, setState] = useState({ loading: true, video: null });
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/youtube")
-      .then((r) => r.json())
-      .then((data) => {
-        if (cancelled) return;
-        if (data.ok && data.videos?.length > 0) {
-          setState({ loading: false, video: data.videos[0] });
-        } else {
-          setState({ loading: false, video: null });
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setState({ loading: false, video: null });
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const v = state.video;
-
-  return (
-    <div className="bg-white border border-line rounded-2xl p-5">
-      <div className="flex items-center justify-between mb-3.5">
-        <span className="font-extrabold text-[13.5px] text-ink">MUI Jaktim TV</span>
-        <a
-          href="https://www.youtube.com/channel/UCPCvI_k-9ActfrHedgePADw"
-          target="_blank"
-          rel="noreferrer"
-          className="text-[10px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded-full hover:bg-red-100 transition-colors"
-        >
-          Subscribe
-        </a>
-      </div>
-
-      <a
-        href={v ? v.url : "https://www.youtube.com/channel/UCPCvI_k-9ActfrHedgePADw"}
-        target="_blank"
-        rel="noreferrer"
-        className="relative aspect-video rounded-xl bg-ink/80 flex items-center justify-center overflow-hidden block group"
-      >
-        {v?.thumbnail && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={v.thumbnail}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        )}
-        <div className="absolute inset-0 bg-black/25 group-hover:bg-black/35 transition-colors" />
-        <div className="relative w-11 h-11 rounded-full bg-white/90 flex items-center justify-center">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#0B4D33">
-            <path d="M8 5v14l11-7z" />
-          </svg>
-        </div>
-      </a>
-
-      <div className="text-[12.5px] font-bold text-ink leading-snug mt-3">
-        {v ? v.title : "Kajian Rutin: Merawat Ukhuwah Islamiyah di Tengah Keberagaman"}
-      </div>
-      <p className="text-[11px] text-ink-soft/70 mt-1.5">
-        {v ? "Video terbaru dari kanal YouTube MUI Jakarta Timur." : "Menampilkan pratinjau. Video terbaru akan tampil otomatis di sini."}
-      </p>
-    </div>
-  );
+import {useEffect,useState} from 'react';import Icon from './Icon';
+const channel='https://www.youtube.com/channel/UCPCvI_k-9ActfrHedgePADw';
+export default function MuiTvBox(){const [state,setState]=useState({loading:true,video:null});const [broken,setBroken]=useState(false);
+useEffect(()=>{let cancelled=false;fetch('/api/youtube',{signal:AbortSignal.timeout(8000)}).then(r=>r.json()).then(data=>{if(!cancelled)setState({loading:false,video:data.ok?data.videos?.[0]||null:null});}).catch(()=>{if(!cancelled)setState({loading:false,video:null});});return()=>{cancelled=true;};},[]);
+const v=state.video;return <div className="media-card"><h3><Icon name="logo-youtube" size={22}/>MUI Jaktim TV</h3>{state.loading?<div><p role="status">Memuat video terbaru…</p><a className="media-channel-link" href={channel} target="_blank" rel="noopener noreferrer">Buka kanal resmi</a></div>:v?.thumbnail&&!broken?<a href={v.url||channel} target="_blank" rel="noopener noreferrer" className="video-link"><div className="video-thumbnail"><img src={v.thumbnail} alt="" onError={()=>setBroken(true)}/><span><Icon name="play-outline" size={24}/></span></div><strong>{v.title}</strong><small>Tonton di YouTube</small></a>:<a href={channel} target="_blank" rel="noopener noreferrer" className="official-channel"><span className="submenu-icon"><Icon name="logo-youtube" size={28}/></span><span><strong>Kanal YouTube MUI Jaktim</strong><small>Kajian dan dokumentasi kegiatan. Buka kanal resmi.</small></span><Icon name="arrow-forward-outline" size={20}/></a>}</div>;
 }
+

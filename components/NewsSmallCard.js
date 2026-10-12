@@ -6,7 +6,7 @@ export default function NewsSmallCard({ item }) {
   return (
     <Link
       href={`/berita/${item.slug}`}
-      className="flex gap-3.5 bg-white border border-line rounded-2xl overflow-hidden p-3 group hover:border-emerald/40 transition-colors"
+      className="news-link flex gap-3.5 bg-white border border-line rounded-2xl overflow-hidden p-3 group hover:border-emerald/40 transition-colors"
     >
       <div className="news-thumb"><NewsImage src={item.imageUrl} category={item.category} compact /></div>
       <div className="min-w-0 flex flex-col justify-center">

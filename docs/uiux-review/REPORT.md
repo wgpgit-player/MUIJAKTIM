@@ -61,7 +61,7 @@ Screenshot sebelum berasal dari situs publik. Screenshot sesudah memakai preview
 
 - Database dan variabel autentikasi lokal belum lengkap/tersambung. Integrasi produksi, sesi pengguna, komentar, arsip penuh 446 dokumen, dan Akun Saya setelah login perlu diperiksa kembali pada lingkungan dengan konfigurasi yang benar.
 - Keyboard virtual, sensor kompas, izin geolokasi, dan safe-area fisik iOS/Android belum diuji pada perangkat nyata. CSS memakai viewport responsif, safe-area dan penyesuaian saat input fokus.
-- Foto/slide asli serta HTML artikel yang nanti diisi admin masih perlu diperiksa dengan konten produksi. Animasi slide menghormati reduced motion; tautan slide tetap mengikuti konfigurasi yang sudah ada.
+- Foto dan HTML artikel yang diisi admin masih perlu diperiksa dengan konten produksi. Hero memakai satu foto statis tanpa autoplay, tombol slide, atau indikator.
 - Belum ada audit pembaca layar menyeluruh atau pengujian seluruh browser.
 
 Sebelum push/deploy: sambungkan konfigurasi lokal yang benar, jalankan ulang build dan lint setelah ESLint tersedia, lalu periksa singkat situs staging dengan data produksi. Tidak perlu menyalin data atau kode fixture preview.

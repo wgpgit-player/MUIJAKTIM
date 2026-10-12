@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import {formatDateID} from "@/lib/date";
+import Icon from "./Icon";
 import Image from "next/image";
-import { useGeolocation, GEO_ERROR_MESSAGES } from "@/lib/useGeolocation";
-import { formatDateID } from "@/lib/date";
+import { useGeolocation } from "@/lib/useGeolocation";
+
 
 const DEFAULT_LOC = { lat: -6.225, lon: 106.9004, label: "Jakarta Timur (default)" };
 const PRAYER_KEYS = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
@@ -17,14 +20,13 @@ function formatCountdown(ms) {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
-// Mobile-only hero — murni wallpaper + info sholat, dikembalikan ke ukuran lega
-// (bukan versi padat) supaya tetap jadi tampilan pembuka yang menarik.
-// Quick-access dipindah ke section terpisah (lihat MobileQuickAccess.js) — tidak ada lagi
-// yang mengambang di atas hero, mengikuti pola NU Online: tiap section punya ruangnya sendiri.
-export default function MobileHero({ heroImageUrl }) {
-  const { loc, status: locStatus, errorReason, request: requestLocation } = useGeolocation(DEFAULT_LOC);
+export default function MobileHero() {
+  const { loc, status: locStatus, request: requestLocation } = useGeolocation(DEFAULT_LOC);
+  const [loadStatus,setLoadStatus]=useState("loading");
   const [timings, setTimings] = useState(null);
-  const [hijri, setHijri] = useState(null);
+  const [hijri,setHijri]=useState(null);
+  const [scheduleOpen,setScheduleOpen]=useState(false);
+
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -32,24 +34,26 @@ export default function MobileHero({ heroImageUrl }) {
     return () => clearInterval(t);
   }, []);
 
-  useEffect(() => {
-    requestLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
+      setLoadStatus("loading");
+      setTimings(null);
       try {
         const res = await fetch(`/api/prayer-times?lat=${loc.lat}&lon=${loc.lon}`, {
           signal: AbortSignal.timeout(8000),
         });
         const data = await res.json();
-        if (cancelled || !data.ok) return;
+        if (cancelled) return;
+        if(!data.ok){setLoadStatus("error");return;}
+        setLoadStatus("ready");
         setTimings(data.timings);
-        setHijri(data.hijri);
+        setHijri(data.hijri||null);
+
       } catch {
-        // Keep whatever timings were already shown; the widget just won't refresh.
+        if(!cancelled)setLoadStatus("error");
       }
     }
     load();
@@ -67,55 +71,23 @@ export default function MobileHero({ heroImageUrl }) {
       d.setHours(h, m, 0, 0);
       return { key, time: d };
     });
-    return entries.find((e) => e.time.getTime() > now.getTime()) ?? entries[0];
+    const upcoming=entries.find(e=>e.time.getTime()>now.getTime()); if(upcoming)return upcoming; entries[0].time.setDate(entries[0].time.getDate()+1); return entries[0];
   }, [timings, now]);
 
-  return (
-    <section className="md:hidden relative overflow-hidden rounded-b-2xl pt-6 pb-10 px-5">
-      <div className="absolute inset-0">
-        <Image src={heroImageUrl || "/hero/slide-1.jpg"} alt="" fill priority className="object-cover" sizes="100vw" />
-        <div className="absolute inset-0 bg-black/60 pointer-events-none" />
-      </div>
-
-      <h1 className="relative z-10 text-white font-bold text-[24px] leading-tight mb-6">Rumah Fatwa &amp; Dakwah Jakarta Timur</h1>
-      {/* lokasi */}
-      <div className="relative z-10 flex items-center justify-center gap-1.5 mb-5">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
-          <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z" />
-          <circle cx="12" cy="9" r="2.5" />
-        </svg>
-        <span className="text-white text-[13px] font-semibold">{loc.label}</span>
-        <button onClick={requestLocation} className="text-white text-[13px] font-bold">
-          {locStatus === "loading" ? "…" : "(Ganti)"}
-        </button>
-      </div>
-      {locStatus === "error" && (
-        <p className="relative z-10 text-center text-[11px] text-amber-200 mb-4 px-4 leading-relaxed">
-          Lokasi belum tersedia. Menggunakan Jakarta Timur.
-        </p>
-      )}
-
-      {/* waktu sholat — besar & lega, jadi fokus utama hero */}
-      <div className="relative z-10 text-center">
-        <div className="text-white text-[13px] font-semibold mb-2">Waktu Sholat Berikutnya</div>
-        {nextPrayer ? (
-          <>
-            <div className="text-white text-[28px] font-extrabold leading-tight">
-              {PRAYER_LABELS[nextPrayer.key]} <span className="text-white">{timings[nextPrayer.key]}</span>{" "}
-              <span className="text-[15px] font-bold text-white/90">WIB</span>
-            </div>
-            <div className="text-white text-[13px] font-bold mt-2">
-              - {formatCountdown(nextPrayer.time.getTime() - now.getTime())} lagi
-            </div>
-          </>
-        ) : (
-          <div className="text-white/80 text-[14px] font-semibold">Memuat jadwal…</div>
-        )}
-        <div className="text-white/85 text-[11.5px] font-semibold mt-3">
-          {formatDateID(now)}
-          {hijri && ` M / ${hijri.day} ${hijri.month.en} ${hijri.year} H`}
-        </div>
-      </div>
-    </section>
-  );
+return <section className="mobile-home-hero mobile-dashboard md:hidden">
+    <header className="mobile-brand">
+      <Image src="/logo.png" alt="Logo resmi MUI" width={46} height={46} priority/>
+      <div><h1>MUI Jakarta Timur</h1><p>Rumah Fatwa &amp; Dakwah</p></div>
+    </header>
+    <div className="mobile-prayer-card">
+      <div className="mobile-prayer-location"><span><Icon name="location-outline" size={16}/>{loc.label.replace(' (default)','')}</span><button type="button" onClick={requestLocation} disabled={locStatus==='loading'}>{locStatus==='loading'?'Mencari…':'Ganti lokasi'}</button></div>
+      <Link href="/layanan/jadwal-shalat" className="mobile-prayer-main">
+        <div><span className="mobile-prayer-eyebrow">{nextPrayer?'Shalat berikutnya':'Jadwal shalat'}</span><strong>{nextPrayer?PRAYER_LABELS[nextPrayer.key]:loadStatus==='error'?'Lihat jadwal':'Memuat…'}</strong></div>
+        {nextPrayer?<div className="mobile-prayer-time"><strong>{timings[nextPrayer.key]}</strong><span>WIB</span></div>:<Icon name="chevron-forward-outline" size={22}/>}
+      </Link>
+      <div className="mobile-prayer-footer"><span>{nextPrayer?'Dalam '+formatCountdown(nextPrayer.time.getTime()-now.getTime()):loadStatus==='error'?'Jadwal belum tersedia. Coba lagi di halaman jadwal.':'Menyiapkan jadwal untuk Anda'}</span><button type="button" className="prayer-expand" aria-expanded={scheduleOpen} aria-controls="mobile-daily-prayers" onClick={()=>setScheduleOpen(value=>!value)}>Jadwal hari ini <Icon name="chevron-forward-outline" size={16}/></button></div>
+      <div id="mobile-daily-prayers" className="mobile-daily-prayers" hidden={!scheduleOpen}>{timings?<><div>{PRAYER_KEYS.map(key=><div key={key} className={nextPrayer?.key===key?"is-next":""}><span>{PRAYER_LABELS[key]}</span><strong>{timings[key]}</strong></div>)}</div><Link href="/layanan/jadwal-shalat">Buka jadwal lengkap →</Link></>:<Link href="/layanan/jadwal-shalat">Lihat jadwal lengkap →</Link>}</div>
+    </div>
+    <p className="mobile-calendar">{formatDateID(now)}{hijri&&<span>{hijri.day+' '+hijri.month?.en+' '+hijri.year+' H'}</span>}</p>
+  </section>;
 }

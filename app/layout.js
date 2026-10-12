@@ -8,6 +8,7 @@ export const metadata = {
   description:
     "Portal layanan keagamaan digital Majelis Ulama Indonesia Kota Administrasi Jakarta Timur: fatwa, dakwah, dan layanan umat.",
   manifest: "/manifest.json",
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "MUI Jaktim" },
   icons: {
     icon: "/logo.png",
     apple: "/logo.png",
@@ -18,6 +19,7 @@ export const viewport = {
   themeColor: "#0B4D33",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
   interactiveWidget: "resizes-content",
 };
 
@@ -32,3 +34,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+

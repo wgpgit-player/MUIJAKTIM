@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
-// Picks one active, in-date-range ad at random for the given placement (simple fairness
-// when a sponsor has more than one creative running). Falls back to a dashed "ruang
-// iklan" placeholder if the slot has nothing configured yet — never renders blank.
+// Render configured, in-date-range sponsor creatives only.
 export default async function AdBanner({ placement }) {
   const now = new Date();
   let candidates = [];
@@ -16,18 +14,11 @@ export default async function AdBanner({ placement }) {
       },
     });
   } catch {
-    // A DB hiccup should never take down the page around it — fall through to placeholder.
+    // A DB hiccup should never take down the page around it — hide the unconfigured slot.
     candidates = [];
   }
 
-  if (candidates.length === 0) {
-    return (
-      <div className="border-2 border-dashed border-line rounded-lg bg-white/60 flex flex-col items-center justify-center text-center py-6 md:py-5 px-5 gap-1.5">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-ink-soft/70">Ruang Iklan / Sponsor</span>
-        <span className="text-[12.5px] text-ink-soft/60">970 &times; 90, hubungi kami untuk beriklan di sini</span>
-      </div>
-    );
-  }
+  if (candidates.length === 0) return null;
 
   const ad = candidates[Math.floor(Math.random() * candidates.length)];
 

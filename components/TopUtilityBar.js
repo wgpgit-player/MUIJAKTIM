@@ -1,5 +1,6 @@
 "use client";
 
+import Icon from "./Icon";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { useGeolocation } from "@/lib/useGeolocation";
@@ -30,7 +31,7 @@ export default function TopUtilityBar() {
   const timeStr = now ? now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) : "";
 
   useEffect(() => {
-    requestLocation();
+    if(window.matchMedia("(min-width:1200px)").matches)requestLocation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -66,27 +67,18 @@ export default function TopUtilityBar() {
     <div className="hidden md:flex items-center justify-between bg-green-dk2 px-8 h-9 text-[11.5px] text-white/80">
       <div className="flex items-center gap-5">
         <span className="flex items-center gap-1.5">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z" />
-            <circle cx="12" cy="9" r="2.5" />
-          </svg>
+          <Icon name="location-outline" size={14}/>
           {loc.label}
         </span>
         {dateStr && (
           <span className="flex items-center gap-1.5">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="4" width="18" height="18" rx="2.5" />
-              <path d="M3 9h18M8 2v4M16 2v4" />
-            </svg>
+            <Icon name="calendar-outline" size={14}/>
             {dateStr}
           </span>
         )}
         {timeStr && (
           <span className="flex items-center gap-1.5 font-mono tabular-nums">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 7v5l3.5 2" />
-            </svg>
+            <Icon name="time-outline" size={14}/>
             {timeStr} WIB
           </span>
         )}
@@ -95,7 +87,7 @@ export default function TopUtilityBar() {
       <div className="flex items-center gap-4">
         <span className="flex items-center gap-1.5 font-bold text-white">
           <Image src="/icons/jadwal-shalat.png" alt="" width={14} height={14} className="object-contain" />
-          Jadwal Sholat:
+          Jadwal Shalat:
         </span>
         {SCHEDULE_ITEMS.map((s) => (
           <span key={s.key} className={`flex items-center gap-1 ${s.key === activeKey ? "text-lime font-bold" : ""}`}>
@@ -106,3 +98,4 @@ export default function TopUtilityBar() {
     </div>
   );
 }
+
