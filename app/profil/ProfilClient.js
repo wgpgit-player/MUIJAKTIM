@@ -1,5 +1,6 @@
 "use client";
 import PageHeader from "@/components/PageHeader";
+import Icon from "@/components/Icon";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -13,23 +14,14 @@ const TABS = [
 function TabIcon({ tab, className }) {
   if (tab === "sejarah")
     return (
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-        <path d="M4 19.5V6a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v13" />
-        <path d="M4 19.5A1.5 1.5 0 0 1 5.5 18H19" />
-        <path d="M8 7h7M8 10.5h7" />
-      </svg>
+      <Icon name="book-outline" size={20} className={className}/>
     );
   if (tab === "visi-misi")
     return (
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-        <circle cx="12" cy="12" r="8" />
-        <circle cx="12" cy="12" r="3.2" />
-      </svg>
+      <Icon name="compass-outline" size={20} className={className}/>
     );
   return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-      <path d="M12 3 4 6.5v4c0 5 3.4 8.6 8 9.8 4.6-1.2 8-4.8 8-9.8v-4z" />
-    </svg>
+    <Icon name="people-outline" size={20} className={className}/>
   );
 }
 

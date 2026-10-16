@@ -1,5 +1,6 @@
 "use client";
 import PageHeader from "@/components/PageHeader";
+import Icon from "@/components/Icon";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -7,11 +8,7 @@ import { CATEGORIES } from "./fatwa-data";
 
 function DocIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M6 3h9l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
-      <path d="M14 3v5h5" />
-      <path d="M8.5 13h7M8.5 16.5h5" />
-    </svg>
+    <Icon name="document-text-outline" size={20}/>
   );
 }
 
@@ -64,10 +61,7 @@ export default function FatwaClient({ fatwaList }) {
             ))}
           </div>
           <div className="fatwa-search relative">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5B6D64" strokeWidth="2" className="absolute left-3.5 top-1/2 -translate-y-1/2">
-              <circle cx="11" cy="11" r="7" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
+            <Icon name="search-outline" size={20} className="absolute left-3.5 top-1/2 -translate-y-1/2"/>
             <input
               aria-label="Cari judul atau nomor fatwa"
               type="search"

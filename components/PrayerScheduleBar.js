@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Icon from "@/components/Icon";
 import { useGeolocation, GEO_ERROR_MESSAGES } from "@/lib/useGeolocation";
 
 const DEFAULT_LOC = { lat: -6.225, lon: 106.9004, label: "Jakarta Timur (default)" };
@@ -76,10 +77,7 @@ export default function PrayerScheduleBar() {
     <div className="relative bg-green-dk2 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
       <div className="flex items-start gap-3 max-w-sm">
         <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F5A524" strokeWidth="2">
-            <rect x="3" y="4" width="18" height="18" rx="3" />
-            <path d="M3 9h18M8 2v4M16 2v4" />
-          </svg>
+          <Icon name="time-outline" size={20}/>
         </div>
         <div>
           <div className="text-white font-extrabold text-[15px] md:text-[16px]">Jadwal Sholat {loc.label}</div>
@@ -123,10 +121,7 @@ export default function PrayerScheduleBar() {
         aria-label="Lihat jadwal lengkap & kiblat"
         className="hidden md:flex absolute -bottom-6 left-6 w-12 h-12 rounded-full bg-white shadow-lg items-center justify-center hover:bg-cream transition-colors"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B4D33" strokeWidth="2">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
-        </svg>
+        <Icon name="time-outline" size={20}/>
       </a>
     </div>
   );

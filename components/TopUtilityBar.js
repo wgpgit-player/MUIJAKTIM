@@ -1,7 +1,7 @@
 "use client";
 
 import Icon from "./Icon";
-import Image from "next/image";
+
 import { useEffect, useMemo, useState } from "react";
 import { useGeolocation } from "@/lib/useGeolocation";
 
@@ -86,7 +86,7 @@ export default function TopUtilityBar() {
 
       <div className="flex items-center gap-4">
         <span className="flex items-center gap-1.5 font-bold text-white">
-          <Image src="/icons/jadwal-shalat.png" alt="" width={14} height={14} className="object-contain" />
+          <Icon name="time-outline" size={16}/>
           Jadwal Shalat:
         </span>
         {SCHEDULE_ITEMS.map((s) => (

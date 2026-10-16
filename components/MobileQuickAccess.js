@@ -1,2 +1,2 @@
-import Link from 'next/link';import Image from 'next/image';import Icon from './Icon';
-export default function MobileQuickAccess({icons}){return <section className="app-quick-access md:hidden" aria-label="Akses layanan"><h2>Akses layanan</h2><div>{icons.map(item=><Link key={item.id} href={item.linkUrl}><span className="app-service-icon">{item.iconUrl?<Image src={item.iconUrl} alt="" fill className="object-contain p-2" sizes="48px"/>:<Icon name={item.iconName||'book-outline'} size={26}/>}</span><span>{item.label}</span></Link>)}</div></section>;}
+import Link from 'next/link';import Icon,{serviceIcon} from './Icon';
+export default function MobileQuickAccess({icons}){return <section className="app-quick-access md:hidden" aria-label="Akses layanan"><h2>Akses layanan</h2><div>{icons.map(item=><Link key={item.id} href={item.linkUrl}><span className="app-service-icon"><Icon name={serviceIcon(item)} size={26}/></span><span>{item.label}</span></Link>)}</div></section>;}

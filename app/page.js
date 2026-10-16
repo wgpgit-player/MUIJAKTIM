@@ -31,21 +31,21 @@ export default async function HomePage() {
 
   const configuredDesktopIcons = quickIcons.filter((i) => i.showOnDesktop);
   const desktopIcons = configuredDesktopIcons.length ? configuredDesktopIcons : [
-    { id: "zakat", label: "Kalkulator Zakat", description: "Hitung zakat Anda", linkUrl: "/layanan/kalkulator-zakat", iconUrl: "/icons/kalkulator-zakat.png" },
-    { id: "fatwa", label: "Fiqih & Fatwa", description: "Kumpulan fatwa MUI", linkUrl: "/fatwa", iconUrl: "/icons/fatwa.png" },
-    { id: "layanan", label: "Layanan Umat", description: "Jawaban dari ulama", linkUrl: "/layanan", iconUrl: "/icons/layanan-umat.png" },
-    { id: "profil", label: "Profil & Pimpinan", description: "Pimpinan MUI Jaktim", linkUrl: "/profil", iconUrl: "/icons/profil-pimpinan.png" },
+    { id: "zakat", label: "Kalkulator Zakat", description: "Hitung zakat Anda", linkUrl: "/layanan/kalkulator-zakat", iconName: "calculator-outline" },
+    { id: "fatwa", label: "Fiqih & Fatwa", description: "Kumpulan fatwa MUI", linkUrl: "/fatwa", iconName: "document-text-outline" },
+    { id: "layanan", label: "Layanan Umat", description: "Jawaban dari ulama", linkUrl: "/layanan", iconName: "chatbubbles-outline" },
+    { id: "profil", label: "Profil & Pimpinan", description: "Pimpinan MUI Jaktim", linkUrl: "/profil", iconName: "people-outline" },
   ];
   const configuredMobileIcons = quickIcons.filter((i) => i.showOnMobile);
   const mobileIcons = configuredMobileIcons.length ? configuredMobileIcons : [
-    {id:'fatwa',label:'Fatwa',linkUrl:'/fatwa',iconUrl:'/icons/fatwa.png'},
+    {id:'fatwa',label:'Fatwa',linkUrl:'/fatwa',iconName:'document-text-outline'},
     {id:'tanya',label:'Tanya Ulama',linkUrl:'/layanan/tanya-ulama',iconName:'chatbubbles-outline'},
-    {id:'shalat',label:'Jadwal Shalat',linkUrl:'/layanan/jadwal-shalat',iconUrl:'/icons/jadwal-shalat.png'},
-    {id:'zakat',label:'Zakat',linkUrl:'/layanan/kalkulator-zakat',iconUrl:'/icons/kalkulator-zakat.png'},
+    {id:'shalat',label:'Jadwal Shalat',linkUrl:'/layanan/jadwal-shalat',iconName:'time-outline'},
+    {id:'zakat',label:'Zakat',linkUrl:'/layanan/kalkulator-zakat',iconName:'calculator-outline'},
     {id:'quran',label:"Al-Qur’an",linkUrl:'/kitab/al-quran',iconName:'book-outline'},
     {id:'khutbah',label:'Khutbah',linkUrl:'/amalan/khutbah-jumat',iconName:'document-text-outline'},
-    {id:'kiblat',label:'Kiblat',linkUrl:'/layanan/jadwal-shalat',iconUrl:'/icons/kiblat.png'},
-    {id:'profil',label:'Profil MUI',linkUrl:'/profil',iconUrl:'/icons/profil-pimpinan.png'},
+    {id:'kiblat',label:'Kiblat',linkUrl:'/layanan/jadwal-shalat',iconName:'compass-outline'},
+    {id:'profil',label:'Profil MUI',linkUrl:'/profil',iconName:'people-outline'},
   ];
 
   const news = newsRows.map((n) => ({

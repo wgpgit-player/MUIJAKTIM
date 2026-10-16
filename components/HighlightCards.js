@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Icon,{serviceIcon} from "./Icon";
 
 export default function HighlightCards({ icons }) {
   return (
@@ -11,7 +11,7 @@ export default function HighlightCards({ icons }) {
           className="quick-access-card flex items-center gap-3 px-4 py-6 md:px-5 md:py-8 group hover:bg-cream transition-colors"
         >
           <div className="w-11 h-11 relative shrink-0 rounded-xl bg-cream border border-line">
-            <Image src={c.iconUrl} alt="" fill className="object-contain p-1.5" sizes="56px" />
+            <Icon name={serviceIcon(c)} size={25} className="absolute inset-0 m-auto text-green-dk"/>
           </div>
           <div className="min-w-0">
             <div className="font-extrabold text-[13.5px] md:text-[14.5px] text-ink leading-tight">{c.label}</div>

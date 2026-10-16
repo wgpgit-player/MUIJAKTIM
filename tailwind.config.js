@@ -19,7 +19,7 @@ module.exports = {
         line: "#E9E6D9",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
         arabic: ["Amiri", "Traditional Arabic", "serif"],
       },
       borderRadius: {

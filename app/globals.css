@@ -1,5 +1,5 @@
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -590,3 +590,8 @@
  .page-header::after{opacity:.14;background-position:right center;mask-image:linear-gradient(90deg,transparent,black)}
 }
 
+
+/* Unified typography and headings without decorative dashes. */
+body,.font-sans{font-family:"Plus Jakarta Sans",system-ui,sans-serif}
+.section-heading h2::before{content:none!important;display:none!important}
+.border-dashed{border-style:solid}

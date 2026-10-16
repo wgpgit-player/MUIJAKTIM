@@ -7,7 +7,7 @@ export default function QuoteCard() {
         &ldquo;Barangsiapa yang menempuh suatu jalan untuk mencari ilmu, maka Allah akan mudahkan baginya jalan
         menuju surga.&rdquo;
       </p>
-      <div className="text-lime text-[12.5px] font-bold">— HR. Muslim</div>
+      <div className="text-lime text-[12.5px] font-bold">HR. Muslim</div>
     </div>
   );
 }
